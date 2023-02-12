@@ -1,14 +1,14 @@
 package com.example.sekkison.message;
 
+import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
 @Data
-public class Message {
+public class Message extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,4 @@ public class Message {
 
     @Column(name = "content")
     private String content;
-
-    @Column(name = "create_at")
-    private LocalDateTime create_at;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
-
 }
