@@ -1,6 +1,7 @@
 package com.example.sekkison.my_appoint;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -13,12 +14,13 @@ public class MyAppoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long user_id;
 
-    @Column(name = "appoint_id")
+    @Column(name = "appoint_id", nullable = false)
     private Long appoint_id;
 
     @Column(name = "is_master")
+    @ColumnDefault(value = "false")
     private Boolean is_master;
 }

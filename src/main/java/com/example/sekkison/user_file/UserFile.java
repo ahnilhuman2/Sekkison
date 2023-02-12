@@ -13,9 +13,9 @@ public class UserFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long user_id;
 
-    @Column(name = "file")
+    @Column(name = "file", unique = true)
     private String file;
 }

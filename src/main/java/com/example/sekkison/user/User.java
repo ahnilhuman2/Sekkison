@@ -2,6 +2,7 @@ package com.example.sekkison.user;
 
 import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -14,21 +15,22 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Character gender;
 
     @Column(name = "content")
+    @ColumnDefault(value = "")
     private String content;
 }
