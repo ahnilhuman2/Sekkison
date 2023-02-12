@@ -1,5 +1,6 @@
 package com.example.sekkison.appoint;
 
+import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "appoints")
 @Data
-public class Appoint {
+public class Appoint extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,12 +41,4 @@ public class Appoint {
 
     @Column(name = "is_public")
     private Boolean is_public;
-
-    @Column(name = "create_at")
-    private LocalDateTime create_at;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
-
-
 }

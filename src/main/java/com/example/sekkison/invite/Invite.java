@@ -1,14 +1,14 @@
 package com.example.sekkison.invite;
 
+import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "invites")
 @Data
-public class Invite {
+public class Invite extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +22,4 @@ public class Invite {
 
     @Column(name = "appoint_id")
     private Long appoint_id;
-
-    @Column(name = "create_at")
-    private LocalDateTime create_at;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
-
-
 }

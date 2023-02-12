@@ -1,14 +1,14 @@
 package com.example.sekkison.friend;
 
+import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "friends")
 @Data
-public class Friend {
+public class Friend extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,4 @@ public class Friend {
 
     @Column(name = "memo")
     private String memo;
-
-    @Column(name = "create_at")
-    private LocalDateTime create_at;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
 }
