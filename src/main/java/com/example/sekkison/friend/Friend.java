@@ -26,6 +26,6 @@ public class Friend extends BaseEntity {
     private Boolean is_accepted;
 
     @Column(name = "memo")
-    @ColumnDefault(value = "")
+    @ColumnDefault("''")
     private String memo;
 }

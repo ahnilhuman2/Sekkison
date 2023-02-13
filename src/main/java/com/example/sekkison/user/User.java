@@ -31,6 +31,6 @@ public class User extends BaseEntity {
     private Character gender;
 
     @Column(name = "content")
-    @ColumnDefault(value = "")
+    @ColumnDefault("''")
     private String content;
 }

@@ -29,7 +29,7 @@ public class Appoint extends BaseEntity {
     private Double pos_y;
 
     @Column(name = "address_detail")
-    @ColumnDefault(value = "")
+    @ColumnDefault("''")
     private String address_detail;
 
     @Column(name = "head_cnt", nullable = false)
