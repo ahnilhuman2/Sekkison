@@ -1,11 +1,11 @@
-package com.example.sekkison.appoint;
+package com.example.sekkison.authority;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/appoints")
+@RequestMapping("/authorities")
 @RequiredArgsConstructor
-public class AppointController {
+public class AuthorityController {
 }
