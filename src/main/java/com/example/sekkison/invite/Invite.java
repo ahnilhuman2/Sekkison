@@ -14,12 +14,12 @@ public class Invite extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "from_id")
+    @Column(name = "from_id", nullable = false)
     private Long from_id;
 
-    @Column(name = "to_id")
+    @Column(name = "to_id", nullable = false)
     private Long to_id;
 
-    @Column(name = "appoint_id")
+    @Column(name = "appoint_id", nullable = false)
     private Long appoint_id;
 }

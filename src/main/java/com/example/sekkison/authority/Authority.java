@@ -13,6 +13,6 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "auth")
+    @Column(name = "auth", nullable = false)
     private String auth;
 }

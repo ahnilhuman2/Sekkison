@@ -2,6 +2,7 @@ package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,10 +16,10 @@ public class Appoint extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
 
     @Column(name = "pos_x")
@@ -28,17 +29,19 @@ public class Appoint extends BaseEntity {
     private Double pos_y;
 
     @Column(name = "address_detail")
+    @ColumnDefault(value = "")
     private String address_detail;
 
-    @Column(name = "head_cnt")
+    @Column(name = "head_cnt", nullable = false)
     private Integer head_cnt;
 
-    @Column(name = "max_cnt")
+    @Column(name = "max_cnt", nullable = false)
     private Integer max_cnt;
 
-    @Column(name = "d_day")
+    @Column(name = "d_day", nullable = false)
     private LocalDateTime d_day;
 
     @Column(name = "is_public")
+    @ColumnDefault(value = "false")
     private Boolean is_public;
 }
