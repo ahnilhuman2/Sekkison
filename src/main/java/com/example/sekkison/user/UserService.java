@@ -15,10 +15,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     public boolean isExist(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) return true;
