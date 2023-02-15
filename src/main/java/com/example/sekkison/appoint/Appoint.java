@@ -1,7 +1,10 @@
 package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "appoints")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Appoint extends BaseEntity {
 
     @Id

@@ -1,13 +1,19 @@
 package com.example.sekkison.invite;
 
 import com.example.sekkison.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "invites")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Invite extends BaseEntity {
 
     @Id

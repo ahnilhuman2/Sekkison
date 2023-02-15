@@ -1,6 +1,9 @@
 package com.example.sekkison.my_appoint;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -8,6 +11,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "my_appoints")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MyAppoint {
 
     @Id

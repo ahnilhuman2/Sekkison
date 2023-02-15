@@ -1,12 +1,18 @@
 package com.example.sekkison.user_authority;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user_authorities")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAuthority {
 
     @Id
