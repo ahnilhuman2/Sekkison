@@ -32,6 +32,12 @@ public class UserService {
 
         ResponseForm responseForm = new ResponseForm();
 
+        if (username == null) return responseForm.setError("아이디를 입력해주세요", false);
+        if (password == null) return responseForm.setError("비밀번호를 입력해주세요", false);
+        if (name == null) return responseForm.setError("별명을 입력해주세요", false);
+        if (phone == null) return responseForm.setError("전화번호를 입력해주세요", false);
+        if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요", false);
+
         if (username.length() < 4 || username.length() >10) {
             responseForm.setError("아이디는 4자 이상 10자 이하여야 합니다", false);
             return responseForm;
@@ -67,6 +73,23 @@ public class UserService {
 
         return responseForm;
 
+    }
 
+    public ResponseForm login(User user) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        User dbUser = userRepository.findByUsername(username);
+        ResponseForm responseForm = new ResponseForm();
+
+        if (dbUser == null) {
+            return responseForm.setError("일치하는 아이디가 없습니다", false);
+        }
+
+        if (!dbUser.getPassword().equals(password)) {
+            return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.", false);
+        } else {
+            return responseForm.setSuccess(true, "로그인 성공");
+        }
     }
 }
