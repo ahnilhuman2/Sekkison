@@ -8,12 +8,14 @@ public class ResponseForm {
     private boolean isSuccess;
     private Object data;
 
-    public void setError(String msg, boolean isSuccess) {
+    public ResponseForm setError(String msg, boolean isSuccess) {
         this.msg = msg;
         this.isSuccess = isSuccess;
+        return this;
     }
-    public void setSuccess(boolean isSuccess, Object data) {
+    public ResponseForm setSuccess(boolean isSuccess, Object data) {
         this.isSuccess = isSuccess;
         this.data = data;
+        return this;
     }
 }

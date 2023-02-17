@@ -1,6 +1,7 @@
 package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.BaseEntity;
+import com.example.sekkison.common.C;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,8 @@ public class Appoint extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category", nullable = false)
-    private Integer category;
+    @Column(name = "type", nullable = false)
+    private C.appointType type;
 
     @Column(name = "title", nullable = false)
     private String title;
