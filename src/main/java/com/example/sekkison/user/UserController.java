@@ -17,7 +17,7 @@ public class UserController {
     @PostMapping("")
     public void join(@RequestBody @Validated User user) {
         userService.register(user);
-
+        
 
     }
 }
