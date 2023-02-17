@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -75,7 +76,7 @@ public class UserService {
 
     }
 
-    public ResponseForm login(User user) {
+    public ResponseForm login(User user, HttpSession session) {
         String username = user.getUsername();
         String password = user.getPassword();
 
@@ -91,5 +92,16 @@ public class UserService {
         } else {
             return responseForm.setSuccess(true, "로그인 성공");
         }
+    }
+
+    public ResponseForm getUser(Long userId) {
+        ResponseForm responseForm = new ResponseForm();
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            responseForm.setError("존재하지 않는 회원입니다", false);
+            return responseForm;
+        }
+        return responseForm.setSuccess(true, user);
     }
 }
