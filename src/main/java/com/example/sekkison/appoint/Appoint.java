@@ -22,6 +22,9 @@ public class Appoint extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "category", nullable = false)
+    private Integer category;
+
     @Column(name = "title", nullable = false)
     private String title;
 
