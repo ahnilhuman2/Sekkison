@@ -46,7 +46,6 @@ public class UserController {
     public ResponseForm duplicateUser(@Validated @PathVariable("parameter") Integer parameter, User user) {
         return userService.duplicate(user, parameter);
     }
-
     
     @GetMapping("/my_list/{userId}/{parameter}")
     public ResponseForm myList(@Validated @PathVariable("parameter") Integer parameter, @PathVariable("userId") User userId) {
