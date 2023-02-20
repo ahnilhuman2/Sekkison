@@ -21,12 +21,12 @@ public class MyAppoint {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    private Long userId;
 
     @Column(name = "appoint_id", nullable = false)
-    private Long appoint_id;
+    private Long appointId;
 
     @Column(name = "is_master")
     @ColumnDefault(value = "false")
-    private Boolean is_master;
+    private Boolean isMaster;
 }

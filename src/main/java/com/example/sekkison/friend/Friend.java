@@ -22,14 +22,14 @@ public class Friend extends BaseEntity {
     private Long id;
 
     @Column(name = "from_id", nullable = false)
-    private Long from_id;
+    private Long fromId;
 
     @Column(name = "to_id", nullable = false)
-    private Long to_id;
+    private Long toId;
 
     @Column(name = "is_accepted")
     @ColumnDefault(value = "false")
-    private Boolean is_accepted;
+    private Boolean isAccepted;
 
     @Column(name = "memo")
     @ColumnDefault("''")

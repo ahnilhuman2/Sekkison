@@ -20,7 +20,7 @@ public class UserFile {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    private Long userId;
 
     @Column(name = "file")
     private String file;

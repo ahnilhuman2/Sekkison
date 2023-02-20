@@ -1,7 +1,6 @@
 package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.ResponseForm;
-import com.example.sekkison.my_appoint.MyAppointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AppointController {
     private final AppointService appointService;
-    private final MyAppointService myAppointService;
 
     @ResponseBody
     @PostMapping("/{user_id}")
