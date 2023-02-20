@@ -27,24 +27,24 @@ public class BaseEntity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @JsonProperty("create_at")
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @JsonProperty("update_at")
-    private LocalDateTime update_at;
+    private LocalDateTime updateAt;
 
     @JsonIgnore
     public String getCreate_at() {
-        if(this.create_at == null) return "";
-        return this.create_at.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        if(this.createAt == null) return "";
+        return this.createAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 
     @JsonIgnore
     public String getUpdate_at() {
-        if(this.update_at == null) return "";
-        return this.update_at.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+        if(this.updateAt == null) return "";
+        return this.updateAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 }

@@ -32,35 +32,35 @@ public class AppointService {
             res.setError("제목이 비어있습니다", false);
 
         // d-day가 비어있다면 에러
-        if (appoint.getD_day() == null) return res.setError("날짜와 시간이 비어있습니다", false);
+        if (appoint.getDDay() == null) return res.setError("날짜와 시간이 비어있습니다", false);
 
         // content가 null 이면 content를 빈 문자열로 초기화
         if (appoint.getContent() == null) appoint.setContent("");
 
         // head_cnt를 1로 세팅 (최초 생성이기 때문)
-        appoint.setHead_cnt(1);
+        appoint.setHeadCnt(1);
 
         // type 세팅
         if (appoint.getType() == null) {
-            if (appoint.getMax_cnt() == null)
+            if (appoint.getMaxCnt() == null)
                 appoint.setType(C.appointType.SOLO);
-            else if (appoint.getPos_x() == null && appoint.getPos_y() == null)
+            else if (appoint.getPosX() == null && appoint.getPosY() == null)
                 appoint.setType(C.appointType.NFTF);
             else
                 appoint.setType(C.appointType.FTF);
         }
 
         // max_cnt가 비어있다면(나만의 약속) 1로 세팅
-        if (appoint.getMax_cnt() == null) appoint.setMax_cnt(1);
+        if (appoint.getMaxCnt() == null) appoint.setMaxCnt(1);
 
         // appoint 저장
         appoint = appointRepository.save(appoint);
 
         // myAppoint 세팅
         MyAppoint myAppoint = MyAppoint.builder()
-                .user_id(user_id)
-                .appoint_id(appoint.getId())
-                .is_master(true).build();
+                .userId(user_id)
+                .appointId(appoint.getId())
+                .isMaster(true).build();
 
         // myAppoint 저장
         myAppointRepository.save(myAppoint);
@@ -95,15 +95,15 @@ public class AppointService {
     }
     // 유저가 해당 약속의 방장인지 아닌지 판단하는 함수
     private Boolean isMaster(Long appointId, Long userId) {
-        MyAppoint myAppoint = myAppointRepository.findByUser_idAndAppoint_id(userId, appointId);
-        return myAppoint.getIs_master();
+        MyAppoint myAppoint = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
+        return myAppoint.getIsMaster();
     }
     // 약속에 참가한 유저 이름 가져오기
     public ResponseForm getAppointMembers(Long appointId) {
         ResponseForm res = new ResponseForm();
 
         // appoint_id로 myAppoint 가져오기
-        List<MyAppoint> myAppoints = myAppointRepository.findByAppoint_id(appointId);
+        List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
 
         // myAppoints가 비어있다면 에러
         if (myAppoints.size() == 0 || myAppoints == null) return res.setError("해당하는 약속이 없습니다", false);
@@ -111,7 +111,7 @@ public class AppointService {
         // members에 유저 이름 넣기
         List<String> members = new ArrayList<>();
         for(MyAppoint ma : myAppoints) {
-            User user = userRepository.findById(ma.getUser_id()).orElse(null);
+            User user = userRepository.findById(ma.getUserId()).orElse(null);
             members.add(user.getName());
         }
         return res.setSuccess(true, members);
@@ -124,7 +124,7 @@ public class AppointService {
         if (!isMaster(appointId, fromId)) return res.setError("강퇴는 방장만 가능합니다", false);
 
         // appoint_id, to_id(user)로 제거할 my_appoint 찾기
-        MyAppoint myAppoint = myAppointRepository.findByUser_idAndAppoint_id(toId, appointId);
+        MyAppoint myAppoint = myAppointRepository.findByUserIdAndAppointId(toId, appointId);
         
         // 없으면 에러
         if (myAppoint == null) return res.setError("약속에 참가한 해당 유저가 없습니다", false);
@@ -149,7 +149,7 @@ public class AppointService {
 
         // 조건에 맞는 appoint리스트 생성
         List<Appoint> appointList =
-                appointRepository.findByTitleContainingAndIs_publicAndIs_recruit(search, is_public, is_recruit, paging);
+                appointRepository.findByTitleContainingAndIsPublicAndIsRecruit(search, is_public, is_recruit, paging);
 
         if (appointList.size() == 0) return res.setError("더이상 약속이 없습니다", false);
         return res.setSuccess(true, appointList);
@@ -158,13 +158,13 @@ public class AppointService {
     private void setHeadCnt(Long appoint_id) {
         // appoint, myappointList 가져오기
         Appoint appoint = appointRepository.findById(appoint_id).orElse(null);
-        List<MyAppoint> myAppoints = myAppointRepository.findByAppoint_id(appoint.getId());
+        List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appoint.getId());
 
         // headCnt 세팅
-        appoint.setHead_cnt(myAppoints.size());
+        appoint.setHeadCnt(myAppoints.size());
 
         // headCnt, maxCnt 같다면 isRecruit false, 다르다면 isRecruit true
-        appoint.setIs_recruit(appoint.getHead_cnt() == appoint.getMax_cnt() ? false : true);
+        appoint.setIsRecruit(appoint.getHeadCnt() == appoint.getMaxCnt() ? false : true);
         appointRepository.save(appoint);
     }
     // 약속 삭제
@@ -175,7 +175,7 @@ public class AppointService {
         if (!isMaster(appointId, userId)) return res.setError("약속 삭제는 방장만 가능합니다", false);
 
         // myAppoints 삭제
-        List<MyAppoint> myAppoints = myAppointRepository.findByAppoint_id(appointId);
+        List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
         for(MyAppoint ma : myAppoints) myAppointRepository.delete(ma);
 
         // appoint 삭제
@@ -193,7 +193,7 @@ public class AppointService {
 
         // maxCnt 설정 및 저장
         Appoint appoint = appointRepository.findById(appointId).orElse(null);
-        appoint.setMax_cnt(count);
+        appoint.setMaxCnt(count);
         appointRepository.save(appoint);
         return res.setSuccess(true, null);
     }
