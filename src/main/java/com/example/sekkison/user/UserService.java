@@ -1,11 +1,15 @@
 package com.example.sekkison.user;
 
 import com.example.sekkison.common.ResponseForm;
+import com.example.sekkison.friend.FriendRepository;
+import com.example.sekkison.message.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -16,6 +20,8 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FriendRepository friendRepository;
+    private final MessageRepository messageRepository;
 
     public boolean isExist(String username) {
         User user = userRepository.findByUsername(username);
@@ -148,28 +154,44 @@ public class UserService {
         return responseForm;
     }
 
-    public ResponseForm duplicate(User user) {
+    public ResponseForm duplicate(User user, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
         User duplicateUsername = userRepository.findByUsername(user.getUsername());
         User duplicateName = userRepository.findByName(user.getName());
         User duplicatePhone = userRepository.findByPhone(user.getPhone());
 
-        if (duplicateUsername != null) {
+        if (parameter == 0 && duplicateUsername != null) {
             responseForm.setError("이미 존재하는 회원입니다", false);
             return responseForm;
         }
 
-        if (duplicateName != null) {
+        if (parameter == 1 && duplicateName != null) {
             responseForm.setError("이미 존재하는 별명입니다", false);
             return responseForm;
         }
 
-        if (duplicatePhone != null) {
+        if (parameter == 2 && duplicatePhone != null) {
             responseForm.setError("이미 존재하는 전화번호입니다", false);
             return responseForm;
         }
 
         responseForm.setSuccess(true, null);
+        return responseForm;
+    }
+
+    public ResponseForm myList(User userId, Integer parameter) {
+        ResponseForm responseForm = new ResponseForm();
+        List<User> friends = friendRepository.findByTo_idAndIs_accepted(userId, false);
+        List<User> appoints = messageRepository.findByTo_idAndIs_accepted(userId, false);
+
+        if (parameter == 0) {
+            responseForm.setSuccess(true, friends);
+        }
+
+        if (parameter == 1) {
+            responseForm.setSuccess(true, appoints);
+        }
+
         return responseForm;
     }
 }
