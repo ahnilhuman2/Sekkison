@@ -1,17 +1,17 @@
 package com.example.sekkison.user;
 
 import com.example.sekkison.common.ResponseForm;
+import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
-import com.example.sekkison.message.MessageRepository;
+import com.example.sekkison.invite.Invite;
+import com.example.sekkison.invite.InviteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -21,7 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
-    private final MessageRepository messageRepository;
+    private final InviteRepository inviteRepository;
 
     public boolean isExist(String username) {
         User user = userRepository.findByUsername(username);
@@ -154,24 +154,24 @@ public class UserService {
         return responseForm;
     }
 
-    public ResponseForm duplicate(User user, Integer parameter) {
+    public ResponseForm duplicate(String str, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
-        User duplicateUsername = userRepository.findByUsername(user.getUsername());
-        User duplicateName = userRepository.findByName(user.getName());
-        User duplicatePhone = userRepository.findByPhone(user.getPhone());
 
-        if (parameter == 0 && duplicateUsername != null) {
-            responseForm.setError("이미 존재하는 회원입니다", false);
+        if (parameter == 0) {
+            User duplicateUsername = userRepository.findByUsername(str);
+            if (duplicateUsername != null) responseForm.setError("이미 존재하는 회원입니다", false);
             return responseForm;
         }
 
-        if (parameter == 1 && duplicateName != null) {
-            responseForm.setError("이미 존재하는 별명입니다", false);
+        if (parameter == 1) {
+            User duplicateName = userRepository.findByName(str);
+            if (duplicateName != null) responseForm.setError("이미 존재하는 별명입니다", false);
             return responseForm;
         }
 
-        if (parameter == 2 && duplicatePhone != null) {
-            responseForm.setError("이미 존재하는 전화번호입니다", false);
+        if (parameter == 2) {
+            User duplicatePhone = userRepository.findByPhone(str);
+            if (duplicatePhone != null) responseForm.setError("이미 존재하는 전화번호입니다", false);
             return responseForm;
         }
 
@@ -179,19 +179,19 @@ public class UserService {
         return responseForm;
     }
 
-    public ResponseForm myList(User userId, Integer parameter) {
+    public ResponseForm myList(Long userId, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
-        List<User> friends = friendRepository.findByTo_idAndIs_accepted(userId, false);
-        List<User> appoints = messageRepository.findByTo_idAndIs_accepted(userId, false);
 
         if (parameter == 0) {
-            responseForm.setSuccess(true, friends);
+            List<Friend> friends = friendRepository.findByToIdAndIsAccepted(userId, false);
+            return responseForm.setSuccess(true, friends);
         }
 
         if (parameter == 1) {
-            responseForm.setSuccess(true, appoints);
+            List<Invite> invites = inviteRepository.findByToId(userId);
+            return responseForm.setSuccess(true, invites);
         }
 
-        return responseForm;
+        return responseForm.setError("실패", false);
     }
 }

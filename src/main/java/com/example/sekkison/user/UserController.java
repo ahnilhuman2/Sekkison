@@ -6,7 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -18,17 +17,20 @@ public class UserController {
     @ResponseBody
     @PostMapping("")
     public ResponseForm join(@RequestBody @Validated User user) {
+
         return userService.register(user);
     }
 
     @ResponseBody
     @PostMapping("/login")
     public ResponseForm login(@Validated User user, HttpSession session) {
+
         return userService.login(user, session);
     }
 
     @GetMapping("")
     public ResponseForm returnUser(Long userId) {
+
         return userService.getUser(userId);
     }
 
@@ -43,12 +45,14 @@ public class UserController {
     }
 
     @GetMapping("/duplicated/{parameter}")
-    public ResponseForm duplicateUser(@Validated @PathVariable("parameter") Integer parameter, User user) {
-        return userService.duplicate(user, parameter);
+    public ResponseForm duplicateUser(@Validated @PathVariable("parameter") Integer parameter, String str) {
+        return userService.duplicate(str, parameter);
     }
     
     @GetMapping("/my_list/{userId}/{parameter}")
-    public ResponseForm myList(@Validated @PathVariable("parameter") Integer parameter, @PathVariable("userId") User userId) {
+    public ResponseForm myList(
+            @PathVariable("userId") Long userId,
+            @PathVariable("parameter") Integer parameter) {
         return userService.myList(userId, parameter);
     }
 

@@ -21,11 +21,11 @@ public class Invite extends BaseEntity {
     private Long id;
 
     @Column(name = "from_id", nullable = false)
-    private Long from_id;
+    private Long fromId;
 
     @Column(name = "to_id", nullable = false)
-    private Long to_id;
+    private Long toId;
 
     @Column(name = "appoint_id", nullable = false)
-    private Long appoint_id;
+    private Long appointId;
 }

@@ -62,64 +62,64 @@ public class Dummy {
 
         // 유저에 권한 부여
         UserAuthority userAuth1 = UserAuthority.builder()
-                .user_id(user1.getId()).authority(auth_member.getId()).build();
+                .userId(user1.getId()).authority(auth_member.getId()).build();
         UserAuthority userAuth2 = UserAuthority.builder()
-                .user_id(user2.getId()).authority(auth_member.getId()).build();
+                .userId(user2.getId()).authority(auth_member.getId()).build();
         UserAuthority userAuth3 = UserAuthority.builder()
-                .user_id(user3.getId()).authority(auth_member.getId()).build();
+                .userId(user3.getId()).authority(auth_member.getId()).build();
         userAuth1 = userAuthorityRepository.save(userAuth1);
         userAuth2 = userAuthorityRepository.save(userAuth2);
         userAuth3 = userAuthorityRepository.save(userAuth3);
 
         // 유저 프로필사진 설정
-        UserFile userFile1 = UserFile.builder().user_id(user1.getId()).file("default.jpg").build();
-        UserFile userFile2 = UserFile.builder().user_id(user2.getId()).file("default.jpg").build();
-        UserFile userFile3 = UserFile.builder().user_id(user3.getId()).file("default.jpg").build();
+        UserFile userFile1 = UserFile.builder().userId(user1.getId()).file("default.jpg").build();
+        UserFile userFile2 = UserFile.builder().userId(user2.getId()).file("default.jpg").build();
+        UserFile userFile3 = UserFile.builder().userId(user3.getId()).file("default.jpg").build();
         userFile1 = userFileRepository.save(userFile1);
         userFile2 = userFileRepository.save(userFile2);
         userFile2 = userFileRepository.save(userFile3);
 
         // 친구 생성
         Friend friend1 = Friend.builder()
-                .to_id(user1.getId()).from_id(user2.getId()).is_accepted(true).memo("김대진").build();
+                .toId(user1.getId()).fromId(user2.getId()).isAccepted(true).memo("김대진").build();
         Friend friend2 = Friend.builder()
-                .to_id(user2.getId()).from_id(user1.getId()).is_accepted(true).memo("안일찬").build();
+                .toId(user2.getId()).fromId(user1.getId()).isAccepted(true).memo("안일찬").build();
         friend1 = friendRepository.save(friend1);
         friend2 = friendRepository.save(friend2);
 
         // 약속 생성
         Appoint appoint1 = Appoint.builder()
                 .title("카페 갈사람").content("봉천동 카페에서 스터디할 사람 구함")
-                .pos_x(37.483071074372766).pos_y(126.93869664756576)
-                .address_detail("TABLE1629 2층 대형 테이블")
-                .head_cnt(2).max_cnt(5).d_day(LocalDateTime.of(2023, 3, 25, 14, 30, 00))
-                .is_public(true).build();
+                .posX(37.483071074372766).posY(126.93869664756576)
+                .addressDetail("TABLE1629 2층 대형 테이블")
+                .headCnt(2).maxCnt(5).dDay(LocalDateTime.of(2023, 3, 25, 14, 30, 00))
+                .isPublic(true).build();
         appoint1 = appointRepository.save(appoint1);
 
         // 약속 멤버 세팅
         MyAppoint myAppoint1 = MyAppoint.builder()
-                .user_id(user1.getId()).appoint_id(appoint1.getId()).is_master(true).build();
+                .userId(user1.getId()).appointId(appoint1.getId()).isMaster(true).build();
         MyAppoint myAppoint2 = MyAppoint.builder()
-                .user_id(user2.getId()).appoint_id(appoint1.getId()).is_master(false).build();
+                .userId(user2.getId()).appointId(appoint1.getId()).isMaster(false).build();
         myAppoint1 = myAppointRepository.save(myAppoint1);
         myAppoint2 = myAppointRepository.save(myAppoint2);
 
         // 쪽지 생성
         Message message1 = Message.builder()
-                .from_id(user1.getId()).to_id(user2.getId()).content("내일 시간 됨?").build();
+                .fromId(user1.getId()).toId(user2.getId()).content("내일 시간 됨?").build();
         Message message2 = Message.builder()
-                .from_id(user2.getId()).to_id(user1.getId()).content("지금 뭐함?").build();
+                .fromId(user2.getId()).toId(user1.getId()).content("지금 뭐함?").build();
         message1 = messageRepository.save(message1);
         message2 = messageRepository.save(message2);
 
         // 약속 초대 생성
         Invite invite1 = Invite.builder()
-                .from_id(user1.getId()).to_id(user3.getId()).appoint_id(appoint1.getId()).build();
+                .fromId(user1.getId()).toId(user3.getId()).appointId(appoint1.getId()).build();
         invite1 = inviteRepository.save(invite1);
 
         // 친구 초대 생성
         Friend addFriend1 = Friend.builder()
-                .from_id(user1.getId()).to_id(user3.getId()).is_accepted(false).build();
+                .fromId(user1.getId()).toId(user3.getId()).isAccepted(false).build();
         addFriend1 = friendRepository.save(addFriend1);
     }
 }

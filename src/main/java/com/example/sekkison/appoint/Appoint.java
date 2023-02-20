@@ -1,6 +1,7 @@
 package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.BaseEntity;
+import com.example.sekkison.common.C;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,9 @@ public class Appoint extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category", nullable = false)
-    private Integer category;
+    @Column(name = "type")
+    @ColumnDefault("0")
+    private C.appointType type;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -32,25 +34,29 @@ public class Appoint extends BaseEntity {
     private String content;
 
     @Column(name = "pos_x")
-    private Double pos_x;
+    private Double posX;
 
     @Column(name = "pos_y")
-    private Double pos_y;
+    private Double posY;
 
     @Column(name = "address_detail")
     @ColumnDefault("''")
-    private String address_detail;
+    private String addressDetail;
 
     @Column(name = "head_cnt", nullable = false)
-    private Integer head_cnt;
+    private Integer headCnt;
 
     @Column(name = "max_cnt", nullable = false)
-    private Integer max_cnt;
+    private Integer maxCnt;
 
     @Column(name = "d_day", nullable = false)
-    private LocalDateTime d_day;
+    private LocalDateTime dDay;
 
     @Column(name = "is_public")
     @ColumnDefault(value = "false")
-    private Boolean is_public;
+    private Boolean isPublic;
+
+    @Column(name = "is_recruit")
+    @ColumnDefault(value = "true")
+    private Boolean isRecruit;
 }
