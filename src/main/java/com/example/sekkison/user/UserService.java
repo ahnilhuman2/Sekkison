@@ -114,12 +114,12 @@ public class UserService {
         User updateUser = userRepository.findById(userId).orElse(null);
         ResponseForm responseForm = new ResponseForm();
 
-        if (name == null && Pattern.matches("^[가-힣]{2,4}$", name)) {
+        if (name == null || !Pattern.matches("^[가-힣]{2,4}$", name)) {
             responseForm.setError("이름은 한글표기, 2-4자여야 합니다", false);
             return responseForm;
         }
 
-        if (password == null && Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
+        if (password == null || !Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
             responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다", false);
             return  responseForm;
         }
@@ -138,6 +138,10 @@ public class UserService {
         ResponseForm responseForm = new ResponseForm();
         User deleteUser = userRepository.findById(userId).orElse(null);
 
+        if (deleteUser == null) {
+            responseForm.setError("존재하지 않는 회원입니다.", false);
+        }
+
         userRepository.delete(deleteUser);
         responseForm.setSuccess(true, null);
 
@@ -150,17 +154,17 @@ public class UserService {
         User duplicateName = userRepository.findByName(user.getName());
         User duplicatePhone = userRepository.findByPhone(user.getPhone());
 
-        if (duplicateUsername == null) {
+        if (duplicateUsername != null) {
             responseForm.setError("이미 존재하는 회원입니다", false);
             return responseForm;
         }
 
-        if (duplicateName == null) {
+        if (duplicateName != null) {
             responseForm.setError("이미 존재하는 별명입니다", false);
             return responseForm;
         }
 
-        if (duplicatePhone == null) {
+        if (duplicatePhone != null) {
             responseForm.setError("이미 존재하는 전화번호입니다", false);
             return responseForm;
         }

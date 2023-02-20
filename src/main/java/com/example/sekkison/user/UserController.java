@@ -32,8 +32,8 @@ public class UserController {
         return userService.getUser(userId);
     }
 
-    @PutMapping("")
-    public ResponseForm updateUser(@Validated Long userId, User user) {
+    @PutMapping("/{userId}")
+    public ResponseForm updateUser(@Validated @PathVariable("userId") Long userId, User user) {
         return userService.updateUser(userId, user);
     }
 
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/duplicated/{parameter}")
-    public ResponseForm duplicateUser(@Validated User user) {
+    public ResponseForm duplicateUser(@Validated @PathVariable User user) {
         return userService.duplicate(user);
     }
 
