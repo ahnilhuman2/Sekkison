@@ -21,10 +21,10 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    private Long userId;
 
     @Column(name = "appoint_id", nullable = false)
-    private Long appoint_id;
+    private Long appointId;
 
     @Column(name = "content", nullable = false)
     private String content;
