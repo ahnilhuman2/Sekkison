@@ -54,4 +54,8 @@ public class Appoint extends BaseEntity {
     @Column(name = "is_public")
     @ColumnDefault(value = "false")
     private Boolean is_public;
+
+    @Column(name = "is_recruit")
+    @ColumnDefault(value = "true")
+    private Boolean is_recruit;
 }
