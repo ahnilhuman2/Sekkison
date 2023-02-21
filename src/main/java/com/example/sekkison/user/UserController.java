@@ -55,5 +55,9 @@ public class UserController {
             @PathVariable("parameter") Integer parameter) {
         return userService.myList(userId, parameter);
     }
-    
+
+    @GetMapping("/search")
+    public ResponseForm search(String str, Long userId) {
+        return userService.searchUser(str, userId);
+    }
 }

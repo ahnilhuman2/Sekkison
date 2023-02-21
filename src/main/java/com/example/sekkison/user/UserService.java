@@ -194,4 +194,21 @@ public class UserService {
 
         return responseForm.setError("실패", false);
     }
+
+    public ResponseForm searchUser(String str, Long userId) {
+        ResponseForm responseForm = new ResponseForm();
+        User user = userRepository.findByName(str);
+        if (user == null) {
+            responseForm.setError("해당 유저가 없습니다", false);
+        }
+
+        Friend friend = Friend.builder()
+                .fromId(userId)
+                .toId(user.getId())
+                .isAccepted(false)
+                .build();
+
+        friendRepository.save(friend);
+        return responseForm.setSuccess(true, null);
+    }
 }
