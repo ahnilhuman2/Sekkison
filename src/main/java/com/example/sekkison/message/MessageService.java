@@ -22,4 +22,12 @@ public class MessageService {
 
         return responseForm.setSuccess(true, messages);
     }
+
+    public ResponseForm deleteMessage(Long messageId) {
+        ResponseForm responseForm = new ResponseForm();
+        Message deleteMessage = messageRepository.findById(messageId).orElse(null);
+
+        messageRepository.delete(deleteMessage);
+        return responseForm.setSuccess(true, null);
+    }
 }
