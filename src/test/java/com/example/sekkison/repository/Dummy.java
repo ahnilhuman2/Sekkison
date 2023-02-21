@@ -5,6 +5,7 @@ import com.example.sekkison.appoint.AppointRepository;
 import com.example.sekkison.authority.Authority;
 import com.example.sekkison.authority.AuthorityRepository;
 import com.example.sekkison.comment.CommentRepository;
+import com.example.sekkison.common.C;
 import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
 import com.example.sekkison.invite.Invite;
@@ -91,7 +92,7 @@ public class Dummy {
         Appoint appoint1 = Appoint.builder()
                 .title("카페 갈사람").content("봉천동 카페에서 스터디할 사람 구함")
                 .posX(37.483071074372766).posY(126.93869664756576)
-                .addressDetail("TABLE1629 2층 대형 테이블")
+                .addressDetail("TABLE1629 2층 대형 테이블").isRecruit(true).type(C.appointType.FTF)
                 .headCnt(2).maxCnt(5).dDay(LocalDateTime.of(2023, 3, 25, 14, 30, 00))
                 .isPublic(true).build();
         appoint1 = appointRepository.save(appoint1);

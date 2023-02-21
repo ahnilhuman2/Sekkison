@@ -56,5 +56,6 @@ public class UserController {
         return userService.myList(userId, parameter);
     }
 
+    //테스트용
 
 }

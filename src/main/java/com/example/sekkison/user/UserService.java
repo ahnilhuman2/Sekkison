@@ -1,15 +1,20 @@
 package com.example.sekkison.user;
 
+import com.example.sekkison.authority.Authority;
+import com.example.sekkison.authority.AuthorityRepository;
 import com.example.sekkison.common.ResponseForm;
 import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
 import com.example.sekkison.invite.Invite;
 import com.example.sekkison.invite.InviteRepository;
+import com.example.sekkison.user_authority.UserAuthority;
+import com.example.sekkison.user_authority.UserAuthorityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -22,6 +27,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
     private final InviteRepository inviteRepository;
+    private final UserAuthorityRepository userAuthorityRepository;
+    private final AuthorityRepository authorityRepository;
 
     public boolean isExist(String username) {
         User user = userRepository.findByUsername(username);
@@ -193,5 +200,27 @@ public class UserService {
         }
 
         return responseForm.setError("실패", false);
+    }
+
+    // 특정 id 의 User 의 Authority (들)을 리턴
+    public List<Authority> selectAuthoritiesById(Long userId){
+        // userId로 유저 찾기
+        User user = userRepository.findById(userId).orElse(null);
+
+        List<Authority> res = new ArrayList<>();
+
+        // 해당 유저가 없으면 빈 배열 리턴
+        if (user == null) return res;
+
+        // userId로 찾은 userAuthority의 auth를 res에 담음
+        List<UserAuthority> tmp = userAuthorityRepository.findByUserId(userId);
+        for(UserAuthority ua : tmp)
+            res.add(authorityRepository.findById(ua.getAuthority()).orElse(null));
+
+        return res;
+    }
+    // username으로 유저 찾기
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

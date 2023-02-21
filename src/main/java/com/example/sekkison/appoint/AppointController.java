@@ -57,7 +57,7 @@ public class AppointController {
         return appointService.deleteAppointMembers(appoint_id, from_id, to_id);
     }
     @ResponseBody
-    @GetMapping("/search/{search}/{is_public}/{is_recruit}/{page}")
+    @GetMapping("/search/{is_public}/{is_recruit}/{page}/{search}")
     // 약속 검색
     public ResponseForm searchAppointList(
             @PathVariable("search") String search,

@@ -7,7 +7,9 @@ import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user.User;
 import com.example.sekkison.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,19 +142,21 @@ public class AppointService {
     public ResponseForm getSearchAppointList(String search, Integer isPublic, Integer isRecruit, Integer page) {
         ResponseForm res = new ResponseForm();
 
-        Boolean is_public = isPublic == 0 ? true : false;
-        Boolean is_recruit = isRecruit == 0 ? true : false;
+        Boolean is_public = isPublic == 1 ? true : false;
+        Boolean is_recruit = isRecruit == 1 ? true : false;
         
         // 페이징 설정
         int pageSize = 10;
-        PageRequest paging = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("id")));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").descending());
 
         // 조건에 맞는 appoint리스트 생성
-        List<Appoint> appointList =
-                appointRepository.findByTitleContainingAndIsPublicAndIsRecruit(search, is_public, is_recruit, paging);
+        Page<Appoint> appointList =
+                appointRepository.findByIsPublicAndIsRecruitAndTitleContains(is_public, is_recruit, search, pageable);
 
-        if (appointList.size() == 0) return res.setError("더이상 약속이 없습니다", false);
-        return res.setSuccess(true, appointList);
+        // 불러올 약속이 없으면 에러
+        if (appointList.getContent().size() == 0) return res.setError("더이상 약속이 없습니다", false);
+
+        return res.setSuccess(true, appointList.getContent());
     }
     // 약속에 참가한 멤버 인원수가 변할 때마다(myAppoint 삭제/추가) 갱신할것
     private void setHeadCnt(Long appoint_id) {
