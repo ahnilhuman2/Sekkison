@@ -23,4 +23,10 @@ public class MessageController {
         return messageService.deleteMessage(messageId);
     }
 
+    @ResponseBody
+    @PostMapping("")
+    public ResponseForm create(Message message) {
+        return messageService.createMessage(message);
+    }
+
 }
