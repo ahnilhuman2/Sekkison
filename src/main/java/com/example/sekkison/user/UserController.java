@@ -67,10 +67,9 @@ public class UserController {
             @PathVariable("parameter") Integer parameter) {
         return userService.myList(userId, parameter);
     }
-
     @ResponseBody
     @GetMapping("/search")
-    // 유저 검색
+    // 유저 검색 + 친구초대 보내기
     public ResponseForm search(String str, Long userId) {
         return userService.searchUser(str, userId);
     }
