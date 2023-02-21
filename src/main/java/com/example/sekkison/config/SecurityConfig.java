@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 			.authorizeRequests()
 			// "/test/**" 로 들어오는 요청은 '인증'만 필요.
-			.antMatchers("/test**").authenticated()
+			.antMatchers("/test/**").authenticated()
 			// /admin/** 주소로 들어오는 요청은 '인증' + ADMIN 권한 필요
 			.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 			// 그 외에는 모두 접근 가능

@@ -235,10 +235,12 @@ public class UserService {
 
         return res;
     }
+
     // username으로 유저 찾기
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }    
+    }
+
     // 유저검색 + 친구초대 보내기
     public ResponseForm searchUser(String str, Long userId) {
         ResponseForm responseForm = new ResponseForm();
