@@ -67,7 +67,6 @@ public class UserController {
             @PathVariable("parameter") Integer parameter) {
         return userService.myList(userId, parameter);
     }
-
     @ResponseBody
     @GetMapping("/search")
     // 유저 검색
