@@ -23,12 +23,7 @@ public class UserService {
     private final FriendRepository friendRepository;
     private final InviteRepository inviteRepository;
 
-    public boolean isExist(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) return true;
-        return false;
-    }
-
+    // 회원 가입(input user)
     public ResponseForm register(User user) {
         String username = user.getUsername().toUpperCase(Locale.ROOT);
         String password = user.getPassword();
@@ -36,21 +31,22 @@ public class UserService {
         String phone = user.getPhone();
         char gender = user.getGender();
 
-        Pattern pattern = Pattern.compile("^[0-9]*$");
-
         ResponseForm responseForm = new ResponseForm();
 
+        // 회원기입란이 공백일 경우 setError 리턴
         if (username == null) return responseForm.setError("아이디를 입력해주세요", false);
         if (password == null) return responseForm.setError("비밀번호를 입력해주세요", false);
         if (name == null) return responseForm.setError("별명을 입력해주세요", false);
         if (phone == null) return responseForm.setError("전화번호를 입력해주세요", false);
         if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요", false);
 
+        // 가입 아이디 길이 제한
         if (username.length() < 4 || username.length() >10) {
             responseForm.setError("아이디는 4자 이상 10자 이하여야 합니다", false);
             return responseForm;
         }
 
+        // 가입 아이디 영문자와 숫자만 포함
         if (!Pattern.matches("^[a-zA-Z0-9]*$", username)) {
             responseForm.setError("아이디는 영문자와 숫자만 포함되어야 합니다", false);
             return responseForm;
@@ -61,21 +57,25 @@ public class UserService {
             return responseForm;
         }
 
+        // 별명은 한글표기 2-4자로 제한
         if (!Pattern.matches("^[가-힣]{2,4}$", name)) {
-            responseForm.setError("이름은 한글표기, 2-4자여야 합니다", false);
+            responseForm.setError("별명은 한글표기, 2-4자여야 합니다", false);
             return responseForm;
         }
 
+        // 전화번호는 - 제외 11자리 입력
         if (!Pattern.matches("^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$", phone)) {
             responseForm.setError("전화번호는 - 제외 11자리로 입력해주세요", false);
             return responseForm;
         }
 
+        // 성별은 버튼 처리 예정
         if (gender != 'M' || gender != 'F') {
             responseForm.setError("성별은 M이나 F로 입력해주세요", false);
             return responseForm;
         }
 
+        // 다 통과했을시 Repository save, success 리턴
         user = userRepository.save(user);
         responseForm.setSuccess(true, null);
 
@@ -83,6 +83,7 @@ public class UserService {
 
     }
 
+    // 유저 로그인
     public ResponseForm login(User user, HttpSession session) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -90,10 +91,12 @@ public class UserService {
         User dbUser = userRepository.findByUsername(username);
         ResponseForm responseForm = new ResponseForm();
 
+        // dbUser에 일치하는 유저가 없을시 에러
         if (dbUser == null) {
             return responseForm.setError("일치하는 아이디가 없습니다", false);
         }
 
+        // 비밀번호 일치시 로그인 성공
         if (!dbUser.getPassword().equals(password)) {
             return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.", false);
         } else {
@@ -101,6 +104,7 @@ public class UserService {
         }
     }
 
+    // user_id를 받아 user객체 리턴하는 함수(mypage나 상대방 정보 볼때 활용)
     public ResponseForm getUser(Long userId) {
         ResponseForm responseForm = new ResponseForm();
         User user = userRepository.findById(userId).orElse(null);
@@ -112,19 +116,23 @@ public class UserService {
         return responseForm.setSuccess(true, user);
     }
 
+    // 회원정보수정
     public ResponseForm updateUser(Long userId, User user) {
         String name = user.getName();
         String password = user.getPassword();
         String content = user.getContent();
 
+        // 로그인된 userId를 기준으로 update할 유저 검색
         User updateUser = userRepository.findById(userId).orElse(null);
         ResponseForm responseForm = new ResponseForm();
 
+        // 비거나, 한글표기, 2-4자 아닐지 error
         if (name == null || !Pattern.matches("^[가-힣]{2,4}$", name)) {
             responseForm.setError("이름은 한글표기, 2-4자여야 합니다", false);
             return responseForm;
         }
 
+        // 비거나, 비밀번호 양식 틀릴시 error
         if (password == null || !Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
             responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다", false);
             return  responseForm;
@@ -140,6 +148,7 @@ public class UserService {
         return responseForm;
     }
 
+    // 회원탈퇴
     public ResponseForm deleteUser(User user, Long userId) {
         ResponseForm responseForm = new ResponseForm();
         User deleteUser = userRepository.findById(userId).orElse(null);
@@ -154,21 +163,25 @@ public class UserService {
         return responseForm;
     }
 
+    // 아이디(0), 별명(1), 전화번호(2) 중복체크
     public ResponseForm duplicate(String str, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
 
+        // 아이디 중복체크
         if (parameter == 0) {
             User duplicateUsername = userRepository.findByUsername(str);
             if (duplicateUsername != null) responseForm.setError("이미 존재하는 회원입니다", false);
             return responseForm;
         }
 
+        // 별명 중복체크
         if (parameter == 1) {
             User duplicateName = userRepository.findByName(str);
             if (duplicateName != null) responseForm.setError("이미 존재하는 별명입니다", false);
             return responseForm;
         }
 
+        // 전화번호 중복체크
         if (parameter == 2) {
             User duplicatePhone = userRepository.findByPhone(str);
             if (duplicatePhone != null) responseForm.setError("이미 존재하는 전화번호입니다", false);
@@ -179,14 +192,17 @@ public class UserService {
         return responseForm;
     }
 
+    // 친구(0) 초대 리스트, 약속(1) 초대 리스트
     public ResponseForm myList(Long userId, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
 
+        // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
         if (parameter == 0) {
             List<Friend> friends = friendRepository.findByToIdAndIsAccepted(userId, false);
             return responseForm.setSuccess(true, friends);
         }
 
+        // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
         if (parameter == 1) {
             List<Invite> invites = inviteRepository.findByToId(userId);
             return responseForm.setSuccess(true, invites);
@@ -195,13 +211,18 @@ public class UserService {
         return responseForm.setError("실패", false);
     }
 
+    // 유저검색
     public ResponseForm searchUser(String str, Long userId) {
         ResponseForm responseForm = new ResponseForm();
+
+        // 입력된 String값을 기준으로 user검색
         User user = userRepository.findByName(str);
+        // 없을시 error
         if (user == null) {
             responseForm.setError("해당 유저가 없습니다", false);
         }
 
+        // 로그인된 userId로부터 검색된 유저에게 초대를 보낸다
         Friend friend = Friend.builder()
                 .fromId(userId)
                 .toId(user.getId())
