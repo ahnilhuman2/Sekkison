@@ -23,4 +23,16 @@ public class FriendController {
         return friendService.send(friend);
     }
 
+    @ResponseBody
+    @PostMapping("/accept")
+    public ResponseForm accept(Long friendId) {
+        return friendService.accept(friendId);
+    }
+
+    @ResponseBody
+    @GetMapping("/list")
+    public ResponseForm list(Long userId) {
+        return friendService.friendList(userId);
+    }
+
 }
