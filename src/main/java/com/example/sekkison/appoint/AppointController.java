@@ -68,6 +68,7 @@ public class AppointController {
     }
     @ResponseBody
     @PutMapping("/setCount/{appoint_id}/{user_id}/{count}")
+    // 약속 최대인원수정
     public ResponseForm updateMaxCnt(
             @PathVariable("appoint_id") Long appoint_id,
             @PathVariable("user_id") Long user_id,

@@ -5,16 +5,16 @@ import lombok.Data;
 @Data
 public class ResponseForm {
     private String msg;
-    private boolean isSuccess;
+    private boolean success;
     private Object data;
 
-    public ResponseForm setError(String msg, boolean isSuccess) {
+    public ResponseForm setError(String msg, boolean success) {
         this.msg = msg;
-        this.isSuccess = isSuccess;
+        this.success = success;
         return this;
     }
-    public ResponseForm setSuccess(boolean isSuccess, Object data) {
-        this.isSuccess = isSuccess;
+    public ResponseForm setSuccess(boolean success, Object data) {
+        this.success = success;
         this.data = data;
         return this;
     }
