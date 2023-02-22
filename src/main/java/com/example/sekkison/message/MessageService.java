@@ -46,7 +46,6 @@ public class MessageService {
         }
 
         messageRepository.save(message);
-        
         return responseForm.setSuccess(true, null);
     }
 }
