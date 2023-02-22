@@ -107,7 +107,7 @@ public class UserService {
         if (!dbUser.getPassword().equals(password)) {
             return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.", false);
         } else {
-            return responseForm.setSuccess(true, "로그인 성공");
+            return responseForm.setSuccess(true, dbUser);
         }
     }
 
