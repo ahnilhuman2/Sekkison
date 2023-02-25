@@ -2,6 +2,7 @@ package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.BaseEntity;
 import com.example.sekkison.common.C;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,6 +51,7 @@ public class Appoint extends BaseEntity {
     private Integer maxCnt;
 
     @Column(name = "d_day", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime dDay;
 
     @Column(name = "is_public")
