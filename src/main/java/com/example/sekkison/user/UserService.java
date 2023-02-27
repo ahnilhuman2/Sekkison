@@ -177,22 +177,28 @@ public class UserService {
         // 아이디 중복체크
         if (parameter == 0) {
             User duplicateUsername = userRepository.findByUsername(str);
-            if (duplicateUsername != null) responseForm.setError("이미 존재하는 회원입니다", false);
-            return responseForm;
+            if (duplicateUsername != null) {
+                responseForm.setError("이미 존재하는 회원입니다", false);
+                return responseForm;
+            }
         }
 
         // 별명 중복체크
         if (parameter == 1) {
             User duplicateName = userRepository.findByName(str);
-            if (duplicateName != null) responseForm.setError("이미 존재하는 별명입니다", false);
-            return responseForm;
+            if (duplicateName != null) {
+                responseForm.setError("이미 존재하는 별명입니다", false);
+                return responseForm;
+            }
         }
 
         // 전화번호 중복체크
         if (parameter == 2) {
             User duplicatePhone = userRepository.findByPhone(str);
-            if (duplicatePhone != null) responseForm.setError("이미 존재하는 전화번호입니다", false);
-            return responseForm;
+            if (duplicatePhone != null) {
+                responseForm.setError("이미 존재하는 전화번호입니다", false);
+                return responseForm;
+            }
         }
 
         responseForm.setSuccess(true, null);

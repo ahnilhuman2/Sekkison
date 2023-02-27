@@ -17,16 +17,15 @@ public class UserController {
     @ResponseBody
     @PostMapping("")
     // 회원가입
-    public ResponseForm join(@RequestBody @Validated User user) {
-
+//    public ResponseForm join(@RequestBody @Validated User user) {
+    public ResponseForm join(User user) {
         return userService.register(user);
     }
 
     @ResponseBody
     @PostMapping("/login")
     // 로그인
-    public ResponseForm login(@Validated User user, HttpSession session) {
-
+    public ResponseForm login(User user, HttpSession session) {
         return userService.login(user, session);
     }
 

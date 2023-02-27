@@ -2,10 +2,7 @@ package com.example.sekkison.my_appoint;
 
 import com.example.sekkison.common.ResponseForm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/myAppoints")
@@ -18,5 +15,11 @@ public class MyAppointController {
     @GetMapping("/is_master")
     public ResponseForm isMaster(Long userId, Long appointId) {
         return myAppointService.isMaster(userId, appointId);
+    }
+
+    @ResponseBody
+    @PostMapping("")
+    public ResponseForm participate(Long userId, Long appointId) {
+        return myAppointService.participate(userId, appointId);
     }
 }

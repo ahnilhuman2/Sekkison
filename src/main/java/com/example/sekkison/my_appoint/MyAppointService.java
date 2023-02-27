@@ -18,4 +18,13 @@ public class MyAppointService {
 
         return responseForm.setSuccess(true, isMaster);
     }
+
+    public ResponseForm participate(Long userId, Long appointId) {
+        ResponseForm responseForm = new ResponseForm();
+        MyAppoint participateRoom = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
+        participateRoom.setIsMaster(false);
+        myAppointRepository.save(participateRoom);
+
+        return responseForm.setSuccess(true, null);
+    }
 }

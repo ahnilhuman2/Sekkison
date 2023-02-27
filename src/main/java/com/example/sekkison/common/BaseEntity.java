@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -36,14 +37,17 @@ public class BaseEntity {
     @JsonProperty("update_at")
     private LocalDateTime updateAt;
 
+
     @JsonIgnore
-    public String getCreate_at() {
-        if(this.createAt == null) return "";
+    public String getCreateAt() {
+        if (this.createAt == null) {
+            return "";
+        }
         return this.createAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 
     @JsonIgnore
-    public String getUpdate_at() {
+    public String getUpdateAt() {
         if(this.updateAt == null) return "";
         return this.updateAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
