@@ -258,6 +258,12 @@ public class Dummy {
                 .addressDetail("파크하얏트 서울").isRecruit(true).type(C.appointType.FTF)
                 .headCnt(2).maxCnt(3).dDay(LocalDateTime.of(2023, 5, 30, 12, 00, 00))
                 .isPublic(true).build();
+        Appoint appoint11 = Appoint.builder()
+                .title("테스트용 약속").content("테스트")
+                .posX(37.508500483292536).posY(127.0641347373916)
+                .addressDetail("파크하얏트 서울").isRecruit(true).type(C.appointType.FTF)
+                .headCnt(2).maxCnt(3).dDay(LocalDateTime.of(2023, 5, 30, 12, 00, 00))
+                .isPublic(true).build();
 
         appoint1 = appointRepository.save(appoint1);
         appoint2 = appointRepository.save(appoint2);
@@ -269,6 +275,8 @@ public class Dummy {
         appoint8 = appointRepository.save(appoint8);
         appoint9 = appointRepository.save(appoint9);
         appoint10 = appointRepository.save(appoint10);
+        appoint11 = appointRepository.save(appoint11);
+
 
 
         // 약속 멤버 세팅
@@ -292,6 +300,10 @@ public class Dummy {
                 .userId(user9.getId()).appointId(appoint10.getId()).isMaster(true).build();
         MyAppoint myAppoint10 = MyAppoint.builder()
                 .userId(user10.getId()).appointId(appoint10.getId()).isMaster(false).build();
+        MyAppoint myAppoint11 = MyAppoint.builder()
+                .userId(user2.getId()).appointId(appoint11.getId()).isMaster(true).build();
+        MyAppoint myAppoint12 = MyAppoint.builder()
+                .userId(user3.getId()).appointId(appoint11.getId()).isMaster(false).build();
 
         myAppoint1 = myAppointRepository.save(myAppoint1);
         myAppoint2 = myAppointRepository.save(myAppoint2);
@@ -303,6 +315,8 @@ public class Dummy {
         myAppoint8 = myAppointRepository.save(myAppoint8);
         myAppoint9 = myAppointRepository.save(myAppoint9);
         myAppoint10 = myAppointRepository.save(myAppoint10);
+        myAppoint11 = myAppointRepository.save(myAppoint11);
+        myAppoint12 = myAppointRepository.save(myAppoint12);
 
         // 쪽지 생성
         Message message1 = Message.builder()
