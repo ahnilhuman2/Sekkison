@@ -12,14 +12,14 @@ public class MessageController {
     private final MessageService messageService;
 
     @ResponseBody
-    @GetMapping("/list")
-    public ResponseForm list(Long userId) {
+    @GetMapping("/list/{userId}")
+    public ResponseForm list(@PathVariable("userId") Long userId) {
         return messageService.messageList(userId);
     }
 
     @ResponseBody
-    @DeleteMapping("/{parameter}")
-    public ResponseForm delete(@PathVariable("parameter") Long messageId) {
+    @DeleteMapping("/{messageId}")
+    public ResponseForm delete(@PathVariable("messageId") Long messageId) {
         return messageService.deleteMessage(messageId);
     }
 

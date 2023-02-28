@@ -40,7 +40,7 @@ public class UserService {
         String password = user.getPassword();
         String name = user.getName();
         String phone = user.getPhone();
-        char gender = user.getGender();
+        Character gender = user.getGender();
 
         ResponseForm responseForm = new ResponseForm();
 
@@ -81,13 +81,13 @@ public class UserService {
         }
 
         // 성별은 버튼 처리 예정
-        if (gender != 'M' || gender != 'F') {
+        if (gender != 'M' && gender != 'F') {
             responseForm.setError("성별은 M이나 F로 입력해주세요", false);
             return responseForm;
         }
 
         // 다 통과했을시 Repository save, success 리턴
-        user = userRepository.save(user);
+        userRepository.save(user);
         responseForm.setSuccess(true, null);
 
         return responseForm;
@@ -160,7 +160,7 @@ public class UserService {
     }
 
     // 회원탈퇴
-    public ResponseForm deleteUser(User user, Long userId) {
+    public ResponseForm deleteUser(Long userId) {
         ResponseForm responseForm = new ResponseForm();
         User deleteUser = userRepository.findById(userId).orElse(null);
 
