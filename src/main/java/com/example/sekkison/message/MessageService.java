@@ -1,7 +1,6 @@
 package com.example.sekkison.message;
 
 import com.example.sekkison.common.ResponseForm;
-import com.example.sekkison.user.User;
 import com.example.sekkison.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ public class MessageService {
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
 
+    // 쪽지 목록
     public ResponseForm messageList(Long userId) {
         ResponseForm responseForm = new ResponseForm();
         List<Message> messages = messageRepository.findByToId(userId);
@@ -24,6 +24,7 @@ public class MessageService {
         return responseForm.setSuccess(true, messages);
     }
 
+    // 쪽지 삭제
     public ResponseForm deleteMessage(Long messageId) {
         ResponseForm responseForm = new ResponseForm();
         Message deleteMessage = messageRepository.findById(messageId).orElse(null);
@@ -32,6 +33,7 @@ public class MessageService {
         return responseForm.setSuccess(true, null);
     }
 
+    // 쪽지 보내기
     public ResponseForm createMessage(Message message) {
         ResponseForm responseForm = new ResponseForm();
 

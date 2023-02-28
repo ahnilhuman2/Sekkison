@@ -88,6 +88,12 @@ public class UserService {
 
         // 다 통과했을시 Repository save, success 리턴
         userRepository.save(user);
+        Authority authmember = authorityRepository.findByAuth("MEMBER");
+        UserAuthority ua = UserAuthority.builder()
+                .userId(user.getId())
+                .authority(authmember.getId())
+                .build();
+        userAuthorityRepository.save(ua);
         responseForm.setSuccess(true, null);
 
         return responseForm;

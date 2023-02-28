@@ -13,6 +13,7 @@ public class InviteController {
 
     @ResponseBody
     @DeleteMapping("/{inviteId}")
+    // 약속초대거절
     public ResponseForm deny(@PathVariable("inviteId") Long inviteId) {
         return inviteService.deny(inviteId);
     }
