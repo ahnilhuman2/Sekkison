@@ -12,26 +12,30 @@ public class FriendController {
     private final FriendService friendService;
 
     @ResponseBody
-    @DeleteMapping("")
-    public ResponseForm deny(Long friendId) {
+    @DeleteMapping("/{friendId}")
+    // 친구초대 거절
+    public ResponseForm deny(@PathVariable("friendId") Long friendId) {
         return friendService.deny(friendId);
     }
 
     @ResponseBody
     @PostMapping("")
+    // 친구초대 보내기
     public ResponseForm send(Friend friend) {
         return friendService.send(friend);
     }
 
     @ResponseBody
-    @PostMapping("/accept")
-    public ResponseForm accept(Long friendId) {
+    @PostMapping("/accept/{friendId}")
+    // 친구초대 수락
+    public ResponseForm accept(@PathVariable("friendID") Long friendId) {
         return friendService.accept(friendId);
     }
 
     @ResponseBody
-    @GetMapping("/list")
-    public ResponseForm list(Long userId) {
+    @GetMapping("/list/{userId}")
+    // 친구목록
+    public ResponseForm list(@PathVariable("userId") Long userId) {
         return friendService.friendList(userId);
     }
 

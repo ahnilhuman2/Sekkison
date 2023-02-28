@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -20,6 +19,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
+    // 친구초대거절
     public ResponseForm deny(Long friendId) {
         ResponseForm responseForm = new ResponseForm();
         Friend deleteFriend = friendRepository.findById(friendId).orElse(null);
@@ -31,14 +31,14 @@ public class FriendService {
         friendRepository.delete(deleteFriend);
         return responseForm.setSuccess(true, null);
     }
-
+    // 친구초대보내기
     public ResponseForm send(Friend friend) {
         ResponseForm responseForm = new ResponseForm();
         friend.setIsAccepted(false);
         friendRepository.save(friend);
         return responseForm.setSuccess(true, null);
     }
-
+    // 친구초대수락
     public ResponseForm accept(Long friendId) {
         ResponseForm responseForm = new ResponseForm();
         Friend acceptedFriend = friendRepository.findById(friendId).orElse(null);
@@ -60,7 +60,7 @@ public class FriendService {
         return responseForm.setSuccess(true, null);
     }
 
-
+    // 친구목록
     public ResponseForm friendList(Long userId) {
         ResponseForm responseForm = new ResponseForm();
         List<Friend> list = friendRepository.findByToIdAndIsAccepted(userId, true);

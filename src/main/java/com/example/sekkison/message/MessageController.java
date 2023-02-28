@@ -12,19 +12,22 @@ public class MessageController {
     private final MessageService messageService;
 
     @ResponseBody
-    @GetMapping("/list")
-    public ResponseForm list(Long userId) {
+    @GetMapping("/list/{userId}")
+    // 쪽지 목록
+    public ResponseForm list(@PathVariable("userId") Long userId) {
         return messageService.messageList(userId);
     }
 
     @ResponseBody
-    @DeleteMapping("/{parameter}")
-    public ResponseForm delete(@PathVariable("parameter") Long messageId) {
+    @DeleteMapping("/{messageId}")
+    // 쪽지 삭제
+    public ResponseForm delete(@PathVariable("messageId") Long messageId) {
         return messageService.deleteMessage(messageId);
     }
 
     @ResponseBody
     @PostMapping("")
+    // 쪽지 보내기
     public ResponseForm create(Message message) {
         return messageService.createMessage(message);
     }
