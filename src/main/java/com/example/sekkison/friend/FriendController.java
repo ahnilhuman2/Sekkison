@@ -12,8 +12,8 @@ public class FriendController {
     private final FriendService friendService;
 
     @ResponseBody
-    @DeleteMapping("")
-    public ResponseForm deny(Long friendId) {
+    @DeleteMapping("/{friendId}")
+    public ResponseForm deny(@PathVariable("friendId") Long friendId) {
         return friendService.deny(friendId);
     }
 
@@ -24,14 +24,14 @@ public class FriendController {
     }
 
     @ResponseBody
-    @PostMapping("/accept")
-    public ResponseForm accept(Long friendId) {
+    @PostMapping("/accept/{friendId}")
+    public ResponseForm accept(@PathVariable("friendID") Long friendId) {
         return friendService.accept(friendId);
     }
 
     @ResponseBody
-    @GetMapping("/list")
-    public ResponseForm list(Long userId) {
+    @GetMapping("/list/{userId}")
+    public ResponseForm list(@PathVariable("userId") Long userId) {
         return friendService.friendList(userId);
     }
 

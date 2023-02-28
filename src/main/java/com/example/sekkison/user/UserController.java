@@ -30,9 +30,9 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("")
+    @GetMapping("/{userId}")
     // id로 user객체 받기
-    public ResponseForm returnUser(Long userId) {
+    public ResponseForm returnUser(@PathVariable("userId") Long userId) {
 
         return userService.getUser(userId);
     }
@@ -40,15 +40,18 @@ public class UserController {
     @ResponseBody
     @PutMapping("/{userId}")
     // 회원정보수정
-    public ResponseForm updateUser(@Validated @PathVariable("userId") Long userId, User user) {
+    public ResponseForm updateUser(
+            @Validated @PathVariable("userId") Long userId,
+            User user) {
         return userService.updateUser(userId, user);
     }
 
     @ResponseBody
-    @DeleteMapping("")
+    @DeleteMapping("/{userId}")
     // 회원탈퇴
-    public ResponseForm deleteUser(@Validated User user, Long userId) {
-        return userService.deleteUser(user, userId);
+    public ResponseForm deleteUser(
+            @PathVariable("userId") Long userId) {
+        return userService.deleteUser(userId);
     }
 
     @ResponseBody
@@ -67,9 +70,9 @@ public class UserController {
         return userService.myList(userId, parameter);
     }
     @ResponseBody
-    @GetMapping("/search")
+    @GetMapping("/search/{userId}")
     // 유저 검색 + 친구초대 보내기
-    public ResponseForm search(String str, Long userId) {
+    public ResponseForm search(String str, @PathVariable("userId") Long userId) {
         return userService.searchUser(str, userId);
     }
     @ResponseBody

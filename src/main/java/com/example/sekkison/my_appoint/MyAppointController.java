@@ -12,14 +12,18 @@ public class MyAppointController {
     private final MyAppointService myAppointService;
 
     @ResponseBody
-    @GetMapping("/is_master")
-    public ResponseForm isMaster(Long userId, Long appointId) {
+    @GetMapping("/is_master/{userId}/{appointId}")
+    public ResponseForm isMaster(
+            @PathVariable("userId") Long userId,
+            @PathVariable("appointId") Long appointId) {
         return myAppointService.isMaster(userId, appointId);
     }
 
     @ResponseBody
-    @PostMapping("")
-    public ResponseForm participate(Long userId, Long appointId) {
+    @PostMapping("/{userId}/{appointId}")
+    public ResponseForm participate(
+            @PathVariable("userId") Long userId,
+            @PathVariable("appointId") Long appointId) {
         return myAppointService.participate(userId, appointId);
     }
 }
