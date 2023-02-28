@@ -13,6 +13,7 @@ public class MyAppointController {
 
     @ResponseBody
     @GetMapping("/is_master/{userId}/{appointId}")
+    // 방장인지 아닌지
     public ResponseForm isMaster(
             @PathVariable("userId") Long userId,
             @PathVariable("appointId") Long appointId) {
@@ -21,9 +22,19 @@ public class MyAppointController {
 
     @ResponseBody
     @PostMapping("/{userId}/{appointId}")
+    // 약속 참가
     public ResponseForm participate(
             @PathVariable("userId") Long userId,
             @PathVariable("appointId") Long appointId) {
         return myAppointService.participate(userId, appointId);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{userId}/{appointId}")
+    // 약속 나가기
+    public ResponseForm delete(
+            @PathVariable("userId") Long userId,
+            @PathVariable("appointId") Long appointId) {
+        return myAppointService.deleteMyAppoint(userId, appointId);
     }
 }

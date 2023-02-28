@@ -12,6 +12,7 @@ public class InviteService {
 
     private final InviteRepository inviteRepository;
 
+    // 약속초대거절
     public ResponseForm deny(Long inviteId) {
         ResponseForm responseForm = new ResponseForm();
         Invite deleteInvite = inviteRepository.findById(inviteId).orElse(null);

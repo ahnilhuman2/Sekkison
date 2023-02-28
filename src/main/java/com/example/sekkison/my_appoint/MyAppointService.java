@@ -21,10 +21,19 @@ public class MyAppointService {
 
     public ResponseForm participate(Long userId, Long appointId) {
         ResponseForm responseForm = new ResponseForm();
-        MyAppoint participateRoom = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
-        participateRoom.setIsMaster(false);
+        MyAppoint participateRoom = MyAppoint.builder()
+                .userId(userId).appointId(appointId).isMaster(false)
+                .build();
         myAppointRepository.save(participateRoom);
 
         return responseForm.setSuccess(true, null);
+    }
+
+    public ResponseForm deleteMyAppoint(Long userId, Long appointId) {
+        ResponseForm res = new ResponseForm();
+        MyAppoint myapp = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
+        if (myapp == null) return res.setError("방에 참가중이 아닙니다", false);
+        myAppointRepository.delete(myapp);
+        return res.setSuccess(true, null);
     }
 }
