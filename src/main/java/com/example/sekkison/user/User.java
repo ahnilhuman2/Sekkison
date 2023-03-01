@@ -39,4 +39,7 @@ public class User extends BaseEntity {
     @Column(name = "content")
     @ColumnDefault("''")
     private String content;
+
+    @Transient
+    private String memo;
 }
