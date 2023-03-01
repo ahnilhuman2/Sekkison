@@ -70,6 +70,7 @@ public class FriendService {
         for (Friend friend : list) {
             Long friendId = friend.getFromId();
             User user = userRepository.findById(friendId).orElse(null);
+            user.setMemo(friend.getMemo());
             list2.add(user);
         }
 

@@ -71,7 +71,7 @@ public class UserController {
     }
     @ResponseBody
     @GetMapping("/search/{userId}")
-    // 유저 검색 + 친구초대 보내기
+    // 유저 검색
     public ResponseForm search(String str, @PathVariable("userId") Long userId) {
         return userService.searchUser(str, userId);
     }

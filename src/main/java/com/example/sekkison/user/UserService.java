@@ -257,26 +257,24 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    // 유저검색 + 친구초대 보내기
+    // 유저검색
     public ResponseForm searchUser(String str, Long userId) {
         ResponseForm responseForm = new ResponseForm();
 
         // 입력된 String값을 기준으로 user검색
-        User user = userRepository.findByName(str);
+        List<User> users = userRepository.findByNameContains(str);
         // 없을시 error
-        if (user == null) {
+        if (users == null || users.size() == 0) {
             responseForm.setError("해당 유저가 없습니다", false);
         }
 
-        // 로그인된 userId로부터 검색된 유저에게 초대를 보낸다
-        Friend friend = Friend.builder()
-                .fromId(userId)
-                .toId(user.getId())
-                .isAccepted(false)
-                .build();
-
-        friendRepository.save(friend);
-        return responseForm.setSuccess(true, null);
+        for(int i = 0; i < users.size(); i++) {
+            Long toId = userId;
+            Long fromId = users.get(i).getId();
+            Friend f = friendRepository.findByToIdAndFromIdAndIsAccepted(toId, fromId, true);
+            users.get(i).setMemo(f != null ? "O" : "X");
+        }
+        return responseForm.setSuccess(true, users);
     }
 
     public void certifiedPhoneNumber(String userPhoneNumber, int randomNumber) {
