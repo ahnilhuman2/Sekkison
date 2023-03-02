@@ -8,4 +8,6 @@ public interface MyAppointRepository extends JpaRepository<MyAppoint, Long> {
     MyAppoint findByUserIdAndAppointId(Long userId, Long appointId);
 
     List<MyAppoint> findByAppointId(Long appointId);
+
+    List<MyAppoint> findByAppointIdAndIsMaster(Long appointId, boolean b);
 }

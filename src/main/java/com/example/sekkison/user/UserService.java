@@ -45,44 +45,44 @@ public class UserService {
         ResponseForm responseForm = new ResponseForm();
 
         // 회원기입란이 공백일 경우 setError 리턴
-        if (username == null) return responseForm.setError("아이디를 입력해주세요", false);
-        if (password == null) return responseForm.setError("비밀번호를 입력해주세요", false);
-        if (name == null) return responseForm.setError("별명을 입력해주세요", false);
-        if (phone == null) return responseForm.setError("전화번호를 입력해주세요", false);
-        if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요", false);
+        if (username == null) return responseForm.setError("아이디를 입력해주세요");
+        if (password == null) return responseForm.setError("비밀번호를 입력해주세요");
+        if (name == null) return responseForm.setError("별명을 입력해주세요");
+        if (phone == null) return responseForm.setError("전화번호를 입력해주세요");
+        if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요");
 
         // 가입 아이디 길이 제한
         if (username.length() < 4 || username.length() >10) {
-            responseForm.setError("아이디는 4자 이상 10자 이하여야 합니다", false);
+            responseForm.setError("아이디는 4자 이상 10자 이하여야 합니다");
             return responseForm;
         }
 
         // 가입 아이디 영문자와 숫자만 포함
         if (!Pattern.matches("^[a-zA-Z0-9]*$", username)) {
-            responseForm.setError("아이디는 영문자와 숫자만 포함되어야 합니다", false);
+            responseForm.setError("아이디는 영문자와 숫자만 포함되어야 합니다");
             return responseForm;
         }
         // 비밀번호 영어 및 숫자를 허용하며, 숫자키와 관련된 특수문자만 허용한다
         if (!Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
-            responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다", false);
+            responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다");
             return responseForm;
         }
 
         // 별명은 한글표기 2-4자로 제한
         if (!Pattern.matches("^[가-힣]{2,8}$", name)) {
-            responseForm.setError("별명은 한글표기, 2-8자여야 합니다", false);
+            responseForm.setError("별명은 한글표기, 2-8자여야 합니다");
             return responseForm;
         }
 
         // 전화번호는 - 제외 11자리 입력
         if (!Pattern.matches("^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$", phone)) {
-            responseForm.setError("전화번호는 - 제외 11자리로 입력해주세요", false);
+            responseForm.setError("전화번호는 - 제외 11자리로 입력해주세요");
             return responseForm;
         }
 
         // 성별은 버튼 처리 예정
         if (gender != 'M' && gender != 'F') {
-            responseForm.setError("성별은 M이나 F로 입력해주세요", false);
+            responseForm.setError("성별은 M이나 F로 입력해주세요");
             return responseForm;
         }
 
@@ -94,7 +94,7 @@ public class UserService {
                 .authority(authmember.getId())
                 .build();
         userAuthorityRepository.save(ua);
-        responseForm.setSuccess(true, null);
+        responseForm.setSuccess(null);
 
         return responseForm;
 
@@ -110,14 +110,14 @@ public class UserService {
 
         // dbUser에 일치하는 유저가 없을시 에러
         if (dbUser == null) {
-            return responseForm.setError("일치하는 아이디가 없습니다", false);
+            return responseForm.setError("일치하는 아이디가 없습니다");
         }
 
         // 비밀번호 일치시 로그인 성공
         if (!dbUser.getPassword().equals(password)) {
-            return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.", false);
+            return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.");
         } else {
-            return responseForm.setSuccess(true, dbUser);
+            return responseForm.setSuccess(dbUser);
         }
     }
 
@@ -127,10 +127,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            responseForm.setError("존재하지 않는 회원입니다", false);
+            responseForm.setError("존재하지 않는 회원입니다");
             return responseForm;
         }
-        return responseForm.setSuccess(true, user);
+        return responseForm.setSuccess(user);
     }
 
     // 회원정보수정
@@ -145,13 +145,13 @@ public class UserService {
 
         // 비거나, 한글표기, 2-4자 아닐지 error
         if (name == null || !Pattern.matches("^[가-힣]{2,4}$", name)) {
-            responseForm.setError("이름은 한글표기, 2-4자여야 합니다", false);
+            responseForm.setError("이름은 한글표기, 2-4자여야 합니다");
             return responseForm;
         }
 
         // 비거나, 비밀번호 양식 틀릴시 error
         if (password == null || !Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
-            responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다", false);
+            responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다");
             return  responseForm;
         }
 
@@ -160,7 +160,7 @@ public class UserService {
         updateUser.setContent(content);
 
         userRepository.save(updateUser);
-        responseForm.setSuccess(true, null);
+        responseForm.setSuccess(null);
 
         return responseForm;
     }
@@ -171,11 +171,11 @@ public class UserService {
         User deleteUser = userRepository.findById(userId).orElse(null);
 
         if (deleteUser == null) {
-            responseForm.setError("존재하지 않는 회원입니다.", false);
+            responseForm.setError("존재하지 않는 회원입니다.");
         }
 
         userRepository.delete(deleteUser);
-        responseForm.setSuccess(true, null);
+        responseForm.setSuccess(null);
 
         return responseForm;
     }
@@ -188,7 +188,7 @@ public class UserService {
         if (parameter == 0) {
             User duplicateUsername = userRepository.findByUsername(str);
             if (duplicateUsername != null) {
-                responseForm.setError("이미 존재하는 회원입니다", false);
+                responseForm.setError("이미 존재하는 회원입니다");
                 return responseForm;
             }
         }
@@ -197,7 +197,7 @@ public class UserService {
         if (parameter == 1) {
             User duplicateName = userRepository.findByName(str);
             if (duplicateName != null) {
-                responseForm.setError("이미 존재하는 별명입니다", false);
+                responseForm.setError("이미 존재하는 별명입니다");
                 return responseForm;
             }
         }
@@ -206,12 +206,12 @@ public class UserService {
         if (parameter == 2) {
             User duplicatePhone = userRepository.findByPhone(str);
             if (duplicatePhone != null) {
-                responseForm.setError("이미 존재하는 전화번호입니다", false);
+                responseForm.setError("이미 존재하는 전화번호입니다");
                 return responseForm;
             }
         }
 
-        responseForm.setSuccess(true, null);
+        responseForm.setSuccess(null);
         return responseForm;
     }
 
@@ -222,16 +222,16 @@ public class UserService {
         // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
         if (parameter == 0) {
             List<Friend> friends = friendRepository.findByToIdAndIsAccepted(userId, false);
-            return responseForm.setSuccess(true, friends);
+            return responseForm.setSuccess(friends);
         }
 
         // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
         if (parameter == 1) {
             List<Invite> invites = inviteRepository.findByToId(userId);
-            return responseForm.setSuccess(true, invites);
+            return responseForm.setSuccess(invites);
         }
 
-        return responseForm.setError("실패", false);
+        return responseForm.setError("실패");
     }
 
     // 특정 id 의 User 의 Authority (들)을 리턴
@@ -265,16 +265,22 @@ public class UserService {
         List<User> users = userRepository.findByNameContains(str);
         // 없을시 error
         if (users == null || users.size() == 0) {
-            responseForm.setError("해당 유저가 없습니다", false);
+            responseForm.setError("해당 유저가 없습니다");
         }
 
         for(int i = 0; i < users.size(); i++) {
-            Long toId = userId;
-            Long fromId = users.get(i).getId();
-            Friend f = friendRepository.findByToIdAndFromIdAndIsAccepted(toId, fromId, true);
-            users.get(i).setMemo(f != null ? "O" : "X");
+            Long fromId = userId;
+            Long toId = users.get(i).getId();
+            if (fromId == toId) continue;
+
+            Friend f = friendRepository.findByToIdAndFromId(toId, fromId);
+            if (f == null) users.get(i).setMemo("X");
+            else {
+                if (f.getIsAccepted()) users.get(i).setMemo("O");
+                else users.get(i).setMemo("-");
+            }
         }
-        return responseForm.setSuccess(true, users);
+        return responseForm.setSuccess(users);
     }
 
     public void certifiedPhoneNumber(String userPhoneNumber, int randomNumber) {

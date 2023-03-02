@@ -18,6 +18,6 @@ public class InviteService {
         Invite deleteInvite = inviteRepository.findById(inviteId).orElse(null);
 
         inviteRepository.delete(deleteInvite);
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
 }

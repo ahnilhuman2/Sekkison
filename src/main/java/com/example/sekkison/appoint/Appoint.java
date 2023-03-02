@@ -61,4 +61,7 @@ public class Appoint extends BaseEntity {
     @Column(name = "is_recruit")
     @ColumnDefault(value = "true")
     private Boolean isRecruit;
+
+    @Transient
+    private String masterName;
 }

@@ -165,37 +165,15 @@ public class Dummy {
         userFile10 = userFileRepository.save(userFile10);
 
         // 친구 생성
-        Friend friend1 = Friend.builder()
-                .toId(user1.getId()).fromId(user2.getId()).isAccepted(true).memo("김대진").build();
-        Friend friend2 = Friend.builder()
-                .toId(user2.getId()).fromId(user1.getId()).isAccepted(true).memo("안일찬").build();
-        Friend friend3 = Friend.builder()
-                .toId(user2.getId()).fromId(user3.getId()).isAccepted(true).memo("김뚜뚜").build();
-        Friend friend4 = Friend.builder()
-                .toId(user2.getId()).fromId(user4.getId()).isAccepted(true).memo("김떙떙").build();
-        Friend friend5 = Friend.builder()
-                .toId(user2.getId()).fromId(user5.getId()).isAccepted(true).memo("박똘똘").build();
-        Friend friend6 = Friend.builder()
-                .toId(user2.getId()).fromId(user6.getId()).isAccepted(true).memo("이둘삼").build();
-        Friend friend7 = Friend.builder()
-                .toId(user2.getId()).fromId(user7.getId()).isAccepted(true).memo("박구사").build();
-        Friend friend8 = Friend.builder()
-                .toId(user2.getId()).fromId(user8.getId()).isAccepted(true).memo("한장땡").build();
-        Friend friend9 = Friend.builder()
-                .toId(user2.getId()).fromId(user9.getId()).isAccepted(true).memo("룰루").build();
-        Friend friend10 = Friend.builder()
-                .toId(user2.getId()).fromId(user10.getId()).isAccepted(true).memo("랄라").build();
-
-        friend1 = friendRepository.save(friend1);
-        friend2 = friendRepository.save(friend2);
-        friend3 = friendRepository.save(friend3);
-        friend4 = friendRepository.save(friend4);
-        friend5 = friendRepository.save(friend5);
-        friend6 = friendRepository.save(friend6);
-        friend7 = friendRepository.save(friend7);
-        friend8 = friendRepository.save(friend8);
-        friend9 = friendRepository.save(friend9);
-        friend10 = friendRepository.save(friend10);
+        createFriend(user2, user1, "안일찬", "김대진");
+        createFriend(user2, user3, "김뚜뚜", "철수");
+        createFriend(user2, user4, "김땡땡", "영희");
+        createFriend(user2, user5, "박똘똘", "동생");
+        createFriend(user2, user6, "이둘삼", "모르는사람");
+        createFriend(user2, user7, "박구사", "마동석");
+        createFriend(user2, user8, "한장땡", "서강준");
+        createFriend(user2, user9, "룰루", "페이커");
+        createFriend(user2, user10, "랄라", "마리오");
 
         // 약속 생성
         Appoint appoint1 = Appoint.builder()
@@ -398,5 +376,13 @@ public class Dummy {
         addFriend4 = friendRepository.save(addFriend4);
         addFriend5 = friendRepository.save(addFriend5);
         addFriend6 = friendRepository.save(addFriend6);
+    }
+    private void createFriend(User user1, User user2, String memo1, String memo2) {
+        Friend f1 = Friend.builder()
+                .toId(user1.getId()).fromId(user2.getId()).isAccepted(true).memo(memo1).build();
+        Friend f2 = Friend.builder()
+                .toId(user2.getId()).fromId(user1.getId()).isAccepted(true).memo(memo2).build();
+        friendRepository.save(f1);
+        friendRepository.save(f2);
     }
 }
