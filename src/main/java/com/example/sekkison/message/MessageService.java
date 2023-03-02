@@ -21,7 +21,7 @@ public class MessageService {
         ResponseForm responseForm = new ResponseForm();
         List<Message> messages = messageRepository.findByToId(userId);
 
-        return responseForm.setSuccess(true, messages);
+        return responseForm.setSuccess(messages);
     }
 
     // 쪽지 삭제
@@ -30,7 +30,7 @@ public class MessageService {
         Message deleteMessage = messageRepository.findById(messageId).orElse(null);
         messageRepository.delete(deleteMessage);
 
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
 
     // 쪽지 보내기
@@ -38,16 +38,16 @@ public class MessageService {
         ResponseForm responseForm = new ResponseForm();
 
         if (userRepository.findById(message.getFromId()) == null) {
-            responseForm.setError("보내는 사람을 입력해주세요", false);
+            responseForm.setError("보내는 사람을 입력해주세요");
             return responseForm;
         }
 
         if (userRepository.findById(message.getToId()) == null) {
-            responseForm.setError("받는 사람을 입력해주세요", false);
+            responseForm.setError("받는 사람을 입력해주세요");
             return responseForm;
         }
 
         messageRepository.save(message);
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
 }

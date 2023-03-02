@@ -8,13 +8,13 @@ public class ResponseForm {
     private boolean success;
     private Object data;
 
-    public ResponseForm setError(String msg, boolean success) {
+    public ResponseForm setError(String msg) {
         this.msg = msg;
-        this.success = success;
+        this.success = false;
         return this;
     }
-    public ResponseForm setSuccess(boolean success, Object data) {
-        this.success = success;
+    public ResponseForm setSuccess(Object data) {
+        this.success = true;
         this.data = data;
         return this;
     }
