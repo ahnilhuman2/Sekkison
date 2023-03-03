@@ -46,14 +46,14 @@ public class FriendService {
         Friend acceptedFriend = friendRepository.findById(friendId).orElse(null);
 
         if (acceptedFriend == null) {
-            responseForm.setError("존재하지 않는 유저입니다.");
+            return responseForm.setError("존재하지 않는 친구초대입니다.");
         }
 
         acceptedFriend.setIsAccepted(true);
         friendRepository.save(acceptedFriend);
 
         Friend friend = Friend.builder()
-                .fromId(acceptedFriend.getId())
+                .fromId(acceptedFriend.getToId())
                 .toId(acceptedFriend.getFromId())
                 .isAccepted(true)
                 .build();
