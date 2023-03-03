@@ -42,7 +42,7 @@ public class UserFileService {
         userFile.setFile(fileName);
         userFileRepository.save(userFile);
 
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
 
     private String writeFile(MultipartFile file) throws IOException {

@@ -25,18 +25,20 @@ public class FriendService {
         Friend deleteFriend = friendRepository.findById(friendId).orElse(null);
 
         if (deleteFriend == null) {
-            return responseForm.setError("존재하지 않는 친구입니다", false);
+            return responseForm.setError("존재하지 않는 친구입니다");
         }
 
         friendRepository.delete(deleteFriend);
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
     // 친구초대보내기
     public ResponseForm send(Friend friend) {
         ResponseForm responseForm = new ResponseForm();
+        Friend isExist = friendRepository.findByToIdAndFromId(friend.getToId(), friend.getFromId());
+        if (isExist != null) return responseForm.setError("이미 친구초대를 한 상태입니다");
         friend.setIsAccepted(false);
         friendRepository.save(friend);
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
     // 친구초대수락
     public ResponseForm accept(Long friendId) {
@@ -44,7 +46,7 @@ public class FriendService {
         Friend acceptedFriend = friendRepository.findById(friendId).orElse(null);
 
         if (acceptedFriend == null) {
-            responseForm.setError("존재하지 않는 유저입니다.", false);
+            responseForm.setError("존재하지 않는 유저입니다.");
         }
 
         acceptedFriend.setIsAccepted(true);
@@ -57,7 +59,7 @@ public class FriendService {
                 .build();
         friendRepository.save(friend);
 
-        return responseForm.setSuccess(true, null);
+        return responseForm.setSuccess(null);
     }
 
     // 친구목록
@@ -70,6 +72,7 @@ public class FriendService {
         for (Friend friend : list) {
             Long friendId = friend.getFromId();
             User user = userRepository.findById(friendId).orElse(null);
+            user.setMemo(friend.getMemo());
             list2.add(user);
         }
 
@@ -80,6 +83,6 @@ public class FriendService {
             }
         });
 
-        return responseForm.setSuccess(true, list2);
+        return responseForm.setSuccess(list2);
     }
 }
