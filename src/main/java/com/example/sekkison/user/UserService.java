@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +34,12 @@ public class UserService {
     private final InviteRepository inviteRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final AuthorityRepository authorityRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원 가입(input user)
     public ResponseForm register(User user) {
         String username = user.getUsername().toUpperCase(Locale.ROOT);
-        String password = user.getPassword();
+        String password = bCryptPasswordEncoder.encode(user.getPassword());
         String name = user.getName();
         String phone = user.getPhone();
         Character gender = user.getGender();
@@ -102,23 +104,27 @@ public class UserService {
 
     // 유저 로그인
     public ResponseForm login(User user, HttpSession session) {
+        ResponseForm responseForm = new ResponseForm();
+
         String username = user.getUsername();
         String password = user.getPassword();
 
         User dbUser = userRepository.findByUsername(username);
-        ResponseForm responseForm = new ResponseForm();
 
         // dbUser에 일치하는 유저가 없을시 에러
         if (dbUser == null) {
             return responseForm.setError("일치하는 아이디가 없습니다");
         }
 
-        // 비밀번호 일치시 로그인 성공
-        if (!dbUser.getPassword().equals(password)) {
+        if (!bCryptPasswordEncoder.matches(password, dbUser.getPassword())) {
             return responseForm.setError("유효하지 않은 아이디와 비밀번호입니다.");
         } else {
             return responseForm.setSuccess(dbUser);
         }
+
+//        if (user != null && bCryptPasswordEncoder.matches(password, dbUser.getPassword())) {
+//            return responseForm.setSuccess(dbUser);
+//        }
     }
 
     // user_id를 받아 user객체 리턴하는 함수(mypage나 상대방 정보 볼때 활용)
