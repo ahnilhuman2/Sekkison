@@ -23,6 +23,7 @@ import com.example.sekkison.user_file.UserFileRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -38,6 +39,7 @@ public class Dummy {
     @Autowired MyAppointRepository myAppointRepository;
     @Autowired UserAuthorityRepository userAuthorityRepository;
     @Autowired UserFileRepository userFileRepository;
+    @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
     void init() {
@@ -49,49 +51,49 @@ public class Dummy {
 
         // 유저 생성
         User user1 = User.builder()
-                .username("USER1").password("1234").name("사과").phone("01012345678")
+                .username("USER1").password(bCryptPasswordEncoder.encode("1234")).name("사과").phone("01012345678")
                 .gender('M').content("안녕하세요 사과입니다").build();
         User user2 = User.builder()
-                .username("USER2").password("1234").name("수박").phone("01011112222")
+                .username("USER2").password(bCryptPasswordEncoder.encode("1234")).name("수박").phone("01011112222")
                 .gender('F').content("안녕하세요 수박입니다").build();
         User user3 = User.builder()
-                .username("USER3").password("1234").name("바나나").phone("01033332222")
+                .username("USER3").password(bCryptPasswordEncoder.encode("1234")).name("바나나").phone("01033332222")
                 .gender('F').content("안녕하세요 바나나입니다").build();
         User user4 = User.builder()
-                .username("USER4").password("1234").name("배").phone("01043545424")
+                .username("USER4").password(bCryptPasswordEncoder.encode("1234")).name("배").phone("01043545424")
                 .gender('M').content("안녕하세요 배입니다").build();
         User user5 = User.builder()
-                .username("USER5").password("1234").name("귤").phone("01094837744")
+                .username("USER5").password(bCryptPasswordEncoder.encode("1234")).name("귤").phone("01094837744")
                 .gender('M').content("안녕하세요 귤입니다").build();
         User user6 = User.builder()
-                .username("USER6").password("1234").name("체리").phone("01012324343")
+                .username("USER6").password(bCryptPasswordEncoder.encode("1234")).name("체리").phone("01012324343")
                 .gender('M').content("안녕하세요 체리입니다").build();
         User user7 = User.builder()
-                .username("USER7").password("1234").name("두리안").phone("01098379393")
+                .username("USER7").password(bCryptPasswordEncoder.encode("1234")).name("두리안").phone("01098379393")
                 .gender('F').content("안녕하세요 두리안입니다").build();
         User user8 = User.builder()
-                .username("USER8").password("1234").name("망고").phone("01044433209")
+                .username("USER8").password(bCryptPasswordEncoder.encode("1234")).name("망고").phone("01044433209")
                 .gender('F').content("안녕하세요 망고입니다").build();
         User user9 = User.builder()
-                .username("USER9").password("1234").name("오렌지").phone("01090873828")
+                .username("USER9").password(bCryptPasswordEncoder.encode("1234")).name("오렌지").phone("01090873828")
                 .gender('M').content("안녕하세요 오렌지입니다").build();
         User user10 = User.builder()
-                .username("USER10").password("1234").name("포도").phone("01088887722")
+                .username("USER10").password(bCryptPasswordEncoder.encode("1234")).name("포도").phone("01088887722")
                 .gender('F').content("안녕하세요 포도입니다").build();
         User user11 = User.builder()
-                .username("USER11").password("1234").name("레몬").phone("01088543622")
+                .username("USER11").password(bCryptPasswordEncoder.encode("1234")).name("레몬").phone("01088543622")
                 .gender('F').content("안녕하세요 레몬입니다").build();
         User user12 = User.builder()
-                .username("USER12").password("1234").name("딸기").phone("01090352632")
+                .username("USER12").password(bCryptPasswordEncoder.encode("1234")).name("딸기").phone("01090352632")
                 .gender('F').content("안녕하세요 딸기입니다").build();
         User user13 = User.builder()
-                .username("USER13").password("1234").name("배추").phone("01075839273")
+                .username("USER13").password(bCryptPasswordEncoder.encode("1234")).name("배추").phone("01075839273")
                 .gender('F').content("안녕하세요 배추입니다").build();
         User user14 = User.builder()
-                .username("USER14").password("1234").name("당근").phone("01067659922")
+                .username("USER14").password(bCryptPasswordEncoder.encode("1234")).name("당근").phone("01067659922")
                 .gender('F').content("안녕하세요 당근입니다").build();
         User user15 = User.builder()
-                .username("USER15").password("1234").name("시금치").phone("01054675653")
+                .username("USER15").password(bCryptPasswordEncoder.encode("1234")).name("시금치").phone("01054675653")
                 .gender('F').content("안녕하세요 시금치입니다").build();
 
         user1 = userRepository.save(user1);

@@ -22,11 +22,9 @@ public class UserFileController {
     @PostMapping("/upload")
     public ResponseForm uploadFile(@RequestParam("file") MultipartFile file,
                                              @RequestParam("userId") Long userId) {
-        System.out.println("프로필 업로드 실행");
         try {
             return userFileService.uploadFile(userId, file);
         } catch (IOException e) {
-            System.out.println("프로필 업로드 실패");
             return null;
         }
     }
