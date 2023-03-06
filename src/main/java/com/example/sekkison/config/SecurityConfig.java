@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration // 스프링컨테이너에 빈으로 생성
 @EnableWebSecurity // WebSecurity 를 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
+
     // BCryptPasswordEncoder 를 bean 으로 등록
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
