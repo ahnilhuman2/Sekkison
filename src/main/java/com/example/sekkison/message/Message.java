@@ -26,6 +26,6 @@ public class Message extends BaseEntity {
     @Column(name = "to_id", nullable = false)
     private Long toId;
 
-    @Column(length=1000, name = "content", nullable = false)
+    @Column(length=500, name = "content", nullable = false)
     private String content;
 }
