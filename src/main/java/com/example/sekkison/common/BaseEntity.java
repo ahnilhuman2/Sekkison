@@ -1,7 +1,6 @@
 package com.example.sekkison.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,8 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @MappedSuperclass
@@ -38,17 +35,18 @@ public class BaseEntity {
     private LocalDateTime updateAt;
 
 
-    @JsonIgnore
-    public String getCreateAt() {
-        if (this.createAt == null) {
-            return "";
-        }
-        return this.createAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-    }
 
-    @JsonIgnore
-    public String getUpdateAt() {
-        if(this.updateAt == null) return "";
-        return this.updateAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-    }
+//    @JsonIgnore
+//    public String getCreateAt() {
+//        if (this.createAt == null) {
+//            return "";
+//        }
+//        return this.createAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+//    }
+//
+//    @JsonIgnore
+//    public String getUpdateAt() {
+//        if(this.updateAt == null) return "";
+//        return this.updateAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+//    }
 }
