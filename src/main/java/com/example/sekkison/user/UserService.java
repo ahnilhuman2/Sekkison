@@ -39,7 +39,7 @@ public class UserService {
     // 회원 가입(input user)
     public ResponseForm register(User user) {
         String username = user.getUsername().toUpperCase(Locale.ROOT);
-        String password = bCryptPasswordEncoder.encode(user.getPassword());
+        String password = user.getPassword();
         String name = user.getName();
         String phone = user.getPhone();
         Character gender = user.getGender();
@@ -89,6 +89,7 @@ public class UserService {
         }
 
         // 다 통과했을시 Repository save, success 리턴
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         Authority authmember = authorityRepository.findByAuth("MEMBER");
         UserAuthority ua = UserAuthority.builder()
