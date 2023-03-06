@@ -323,4 +323,17 @@ public class UserService {
         } catch (CoolsmsException e) {
         }
     }
+
+    public ResponseForm updateName(Long userId, String name) {
+        ResponseForm res = new ResponseForm();
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return res.setError("해당 유저가 없습니다");
+
+        User comp = userRepository.findByName(name);
+        if (comp != null) return res.setError("이름이 중복됩니다");
+
+        user.setName(name);
+        userRepository.save(user);
+        return res.setSuccess(null);
+    }
 }
