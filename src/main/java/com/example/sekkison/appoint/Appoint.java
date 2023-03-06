@@ -63,5 +63,5 @@ public class Appoint extends BaseEntity {
     private Boolean isRecruit;
 
     @Transient
-    private String masterName;
+    private String memo;
 }

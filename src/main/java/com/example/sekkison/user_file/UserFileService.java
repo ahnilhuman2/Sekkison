@@ -28,17 +28,21 @@ public class UserFileService {
 
     public ResponseForm uploadFile(Long userId, MultipartFile file) throws IOException {
         ResponseForm responseForm = new ResponseForm();
+        if (file.isEmpty() || "".equals(file.getName())) {
+            UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
+            if (userFile != null && !userFile.getFile().equals("default.jpg"))
+                new File(uploadDir + "/" + userFile.getFile()).delete();
+            userFile.setFile("default.jpg");
+            userFileRepository.save(userFile);
+            return responseForm.setSuccess(null);
+        }
+
         String fileName = writeFile(file);
 
-        userFileRepository.findByUserId(userId).ifPresent(userFile -> {
-            File file1 = new File(uploadDir + "/" + userFile.getFile());
-            if (file1.exists()) {
-                file1.delete();
-            }
-            userFileRepository.delete(userFile);
-        });
-        UserFile userFile = new UserFile();
-        userFile.setUserId(userId);
+        UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
+        if (userFile != null && !userFile.getFile().equals("default.jpg"))
+            new File(uploadDir + "/" + userFile.getFile()).delete();
+
         userFile.setFile(fileName);
         userFileRepository.save(userFile);
 

@@ -1,5 +1,7 @@
 package com.example.sekkison.user;
 
+import com.example.sekkison.appoint.Appoint;
+import com.example.sekkison.appoint.AppointRepository;
 import com.example.sekkison.authority.Authority;
 import com.example.sekkison.authority.AuthorityRepository;
 import com.example.sekkison.common.ResponseForm;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,7 @@ public class UserService {
     private final InviteRepository inviteRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final AuthorityRepository authorityRepository;
+    private final AppointRepository appointRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원 가입(input user)
@@ -226,16 +230,31 @@ public class UserService {
     public ResponseForm myList(Long userId, Integer parameter) {
         ResponseForm responseForm = new ResponseForm();
 
-        // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
+        // userId를 받아 해당 유저가 받은 친구초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
         if (parameter == 0) {
             List<Friend> friends = friendRepository.findByToIdAndIsAccepted(userId, false);
+            if (friends.size() == 0 || friends == null)
+                return responseForm.setError("친구초대목록이 비어있습니다");
             return responseForm.setSuccess(friends);
         }
 
-        // userId를 받아 해당 유저가 받은 초대 목록 리턴하는 함수(친구 is_accepted=false인것만 표시)
+        // userId를 받아 해당 유저가 받은 약속초대 목록 리턴하는 함수
         if (parameter == 1) {
             List<Invite> invites = inviteRepository.findByToId(userId);
-            return responseForm.setSuccess(invites);
+
+            if (invites.size() == 0 || invites == null)
+                return responseForm.setError("약속초대목록이 비어있습니다");
+
+            List<Appoint> appointList = new ArrayList<>();
+            for(Invite i : invites) {
+                User u = userRepository.findById(i.getFromId()).orElse(null);
+                Appoint a = new Appoint();
+                BeanUtils.copyProperties(appointRepository.findById(i.getAppointId()).orElse(null), a);
+                a.setMemo(u.getName() + "&" + i.getId());
+                a.setCreateAt(i.getCreateAt());
+                appointList.add(a);
+            }
+            return responseForm.setSuccess(appointList);
         }
 
         return responseForm.setError("실패");
@@ -270,15 +289,12 @@ public class UserService {
 
         // 입력된 String값을 기준으로 user검색
         List<User> users = userRepository.findByNameContains(str);
-        // 없을시 error
-        if (users == null || users.size() == 0) {
-            responseForm.setError("해당 유저가 없습니다");
-        }
 
+        User removeUser = null;
         for(int i = 0; i < users.size(); i++) {
             Long fromId = userId;
             Long toId = users.get(i).getId();
-            if (fromId == toId) continue;
+            if (fromId == toId) removeUser = users.get(i);
 
             Friend f = friendRepository.findByToIdAndFromId(toId, fromId);
             if (f == null) users.get(i).setMemo("X");
@@ -286,6 +302,12 @@ public class UserService {
                 if (f.getIsAccepted()) users.get(i).setMemo("O");
                 else users.get(i).setMemo("-");
             }
+        }
+        if (removeUser != null) users.remove(removeUser);
+
+        // 없을시 error
+        if (users == null || users.size() == 0) {
+            responseForm.setError("해당 유저가 없습니다");
         }
         return responseForm.setSuccess(users);
     }
@@ -307,5 +329,18 @@ public class UserService {
             JSONObject obj = (JSONObject) coolsms.send(params);
         } catch (CoolsmsException e) {
         }
+    }
+
+    public ResponseForm updateName(Long userId, String name) {
+        ResponseForm res = new ResponseForm();
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return res.setError("해당 유저가 없습니다");
+
+        User comp = userRepository.findByName(name);
+        if (comp != null) return res.setError("이름이 중복됩니다");
+
+        user.setName(name);
+        userRepository.save(user);
+        return res.setSuccess(null);
     }
 }

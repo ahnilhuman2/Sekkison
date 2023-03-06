@@ -28,7 +28,7 @@ public class FriendController {
     @ResponseBody
     @PostMapping("/accept/{friendId}")
     // 친구초대 수락
-    public ResponseForm accept(@PathVariable("friendID") Long friendId) {
+    public ResponseForm accept(@PathVariable("friendId") Long friendId) {
         return friendService.accept(friendId);
     }
 

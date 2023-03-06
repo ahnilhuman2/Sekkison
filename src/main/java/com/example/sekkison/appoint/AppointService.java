@@ -160,15 +160,15 @@ public class AppointService {
         for(Appoint a : appointList.getContent()) {
             List<MyAppoint> ma = myAppointRepository.findByAppointIdAndIsMaster(a.getId(), true);
             if (ma == null || ma.size() == 0) {
-                a.setMasterName("unknown");
+                a.setMemo("unknown");
                 continue;
             }
             User u = userRepository.findById(ma.get(0).getUserId()).orElse(null);
             if (u == null) {
-                a.setMasterName("unknown");
+                a.setMemo("unknown");
                 continue;
             }
-            a.setMasterName(u.getName());
+            a.setMemo(u.getName());
         }
 
         return res.setSuccess(appointList.getContent());

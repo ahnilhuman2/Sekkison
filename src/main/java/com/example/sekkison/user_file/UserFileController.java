@@ -3,12 +3,9 @@ package com.example.sekkison.user_file;
 import com.example.sekkison.common.ResponseForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 
 @RestController
@@ -21,9 +18,10 @@ public class UserFileController {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @PostMapping("/upload/{userId}")
+    @ResponseBody
+    @PostMapping("/upload")
     public ResponseForm uploadFile(@RequestParam("file") MultipartFile file,
-                                             @PathVariable("userId") Long userId) {
+                                             @RequestParam("userId") Long userId) {
         try {
             return userFileService.uploadFile(userId, file);
         } catch (IOException e) {

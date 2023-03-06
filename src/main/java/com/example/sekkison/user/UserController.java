@@ -41,7 +41,7 @@ public class UserController {
     @PutMapping("/{userId}")
     // 회원정보수정
     public ResponseForm updateUser(
-            @Validated @PathVariable("userId") Long userId,
+            @PathVariable("userId") Long userId,
             User user) {
         return userService.updateUser(userId, user);
     }
@@ -82,5 +82,14 @@ public class UserController {
         int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);//난수 생성
         userService.certifiedPhoneNumber(phone,randomNumber);
         return Integer.toString(randomNumber);
+    }
+
+    @ResponseBody
+    @PutMapping("/name/{userId}")
+    // 회원정보수정
+    public ResponseForm updateName(
+            @PathVariable("userId") Long userId,
+            String name) {
+        return userService.updateName(userId, name);
     }
 }
