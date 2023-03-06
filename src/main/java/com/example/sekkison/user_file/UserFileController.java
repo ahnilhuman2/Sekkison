@@ -21,9 +21,9 @@ public class UserFileController {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/{userId}")
     public ResponseForm uploadFile(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("userId") Long userId) {
+                                             @PathVariable("userId") Long userId) {
         try {
             return userFileService.uploadFile(userId, file);
         } catch (IOException e) {
