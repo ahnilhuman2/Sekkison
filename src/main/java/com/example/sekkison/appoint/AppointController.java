@@ -75,4 +75,12 @@ public class AppointController {
             @PathVariable("count") Integer count) {
         return appointService.updateMaxCnt(appoint_id, user_id, count);
     }
+    @ResponseBody
+    @GetMapping("/list/{userId}/{page}")
+    // 내 약속 목록 가져오기(페이징)
+    public ResponseForm getMyAppointList(
+            @PathVariable("userId") Long userId,
+            @PathVariable("page") Integer page){
+        return appointService.getMyAppointList(userId, page);
+    }
 }

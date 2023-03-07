@@ -331,15 +331,20 @@ public class UserService {
         }
     }
 
-    public ResponseForm updateName(Long userId, String name) {
+    public ResponseForm updateName(Integer param, Long userId, String str) {
         ResponseForm res = new ResponseForm();
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) return res.setError("해당 유저가 없습니다");
 
-        User comp = userRepository.findByName(name);
-        if (comp != null) return res.setError("이름이 중복됩니다");
+        if (param == 0) {
+            User comp = userRepository.findByName(str);
+            if (comp != null) return res.setError("이름이 중복됩니다");
 
-        user.setName(name);
+            user.setName(str);
+        } else if (param == 1) {
+            if (str == null) str = "";
+            user.setContent(str);
+        }
         userRepository.save(user);
         return res.setSuccess(null);
     }

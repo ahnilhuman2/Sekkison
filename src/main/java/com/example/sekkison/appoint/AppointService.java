@@ -79,6 +79,14 @@ public class AppointService {
         // id로 찾을 수 없으면
         if (appoint == null) return res.setError("약속이 존재하지 않습니다");
 
+        // memo에 방장 이름 세팅
+        List<MyAppoint> ma = myAppointRepository.findByAppointIdAndIsMaster(appoint.getId(), true);
+        if (ma == null || ma.size() == 0) appoint.setMemo("unknown");
+        else {
+            User u = userRepository.findById(ma.get(0).getUserId()).orElse(null);
+            if (u == null) appoint.setMemo("unknown");
+            else appoint.setMemo(u.getName());
+        }
         return res.setSuccess(appoint);
     }
     // 약속 수정하기 (input : user_id, appoint_id, appoint)
@@ -111,10 +119,10 @@ public class AppointService {
         if (myAppoints.size() == 0 || myAppoints == null) return res.setError("해당하는 약속이 없습니다");
 
         // members에 유저 이름 넣기
-        List<String> members = new ArrayList<>();
+        List<User> members = new ArrayList<>();
         for(MyAppoint ma : myAppoints) {
             User user = userRepository.findById(ma.getUserId()).orElse(null);
-            members.add(user.getName());
+            members.add(user);
         }
         return res.setSuccess(members);
     }
@@ -215,5 +223,35 @@ public class AppointService {
         appoint.setMaxCnt(count);
         appointRepository.save(appoint);
         return res.setSuccess(null);
+    }
+    // 내 약속 목록 가져오기(페이징)
+    public ResponseForm getMyAppointList(Long userId, Integer page) {
+        ResponseForm res = new ResponseForm();
+
+        // 페이징 설정
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").descending());
+
+        // 조건에 맞는 appoint리스트 생성
+        Page<MyAppoint> myAppointList =
+                myAppointRepository.findByUserId(userId, pageable);
+
+        // 불러올 약속이 없으면 에러
+        if (myAppointList.getContent().size() == 0) return res.setError("더이상 약속이 없습니다");
+
+        List<Appoint> appointList = new ArrayList<>();
+        for(MyAppoint ma : myAppointList.getContent()) {
+            Long appointId = ma.getAppointId();
+            Appoint a = appointRepository.findById(appointId).orElse(null);
+            List<MyAppoint> maList = myAppointRepository.findByAppointIdAndIsMaster(appointId, true);
+            if (maList == null || maList.size() == 0) a.setMemo("unknown");
+            else {
+                User u = userRepository.findById(maList.get(0).getUserId()).orElse(null);
+                if (u == null) a.setMemo("unknown");
+                else a.setMemo(u.getName());
+            }
+            appointList.add(a);
+        }
+        return res.setSuccess(appointList);
     }
 }

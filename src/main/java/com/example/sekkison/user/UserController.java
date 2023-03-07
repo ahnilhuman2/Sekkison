@@ -85,11 +85,12 @@ public class UserController {
     }
 
     @ResponseBody
-    @PutMapping("/name/{userId}")
+    @PutMapping("/{param}/{userId}")
     // 회원정보수정
     public ResponseForm updateName(
+            @PathVariable("param") Integer param,
             @PathVariable("userId") Long userId,
-            String name) {
-        return userService.updateName(userId, name);
+            String str) {
+        return userService.updateName(param, userId, str);
     }
 }

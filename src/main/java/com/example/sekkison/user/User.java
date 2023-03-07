@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     @Column(name = "gender", nullable = false)
     private Character gender;
 
-    @Column(name = "content")
+    @Column(length=500, name = "content")
     @ColumnDefault("''")
     private String content;
 
