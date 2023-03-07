@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +25,8 @@ public class UserFileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    private static final long MAX_IMAGE_SIZE = 5242880;
+
     private final UserFileRepository userFileRepository;
     private final UserRepository userRepository;
 
@@ -35,6 +39,11 @@ public class UserFileService {
             userFile.setFile("default.jpg");
             userFileRepository.save(userFile);
             return responseForm.setSuccess(null);
+        }
+
+        // 이미지 크기 제한 체크
+        if (file.getSize() > MAX_IMAGE_SIZE) {
+            throw new RuntimeException("이미지 크기가 너무 큽니다.");
         }
 
         String fileName = writeFile(file);
@@ -59,5 +68,19 @@ public class UserFileService {
         Path path = Paths.get(filePath);
         Files.write(path, fileContent);
         return fileName;
+    }
+
+//    public java.io.File getFile1(Long userId) throws FileNotFoundException {
+//        UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
+//        if (userFile == null) {
+//            throw new FileNotFoundException("User file not found.");
+//        }
+//        return new java.io.File(userFile.getFile());
+//    }
+
+    public String getFile(Long userId) {
+        UserFile userFile = userFileRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("UserFile not found with userId: " + userId));
+        return userFile.getFile();
     }
 }
