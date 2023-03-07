@@ -176,7 +176,7 @@ public class AppointService {
                 a.setMemo("unknown");
                 continue;
             }
-            a.setMemo(u.getName());
+            a.setMemo(u.getId() + "&" + u.getName());
         }
 
         return res.setSuccess(appointList.getContent());
