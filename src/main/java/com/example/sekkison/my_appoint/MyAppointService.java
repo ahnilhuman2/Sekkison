@@ -26,6 +26,7 @@ public class MyAppointService {
         MyAppoint participateRoom = MyAppoint.builder()
                 .userId(userId).appointId(appointId).isMaster(false)
                 .build();
+        // invite 삭제 로직
         myAppointRepository.save(participateRoom);
 
         return responseForm.setSuccess(null);
