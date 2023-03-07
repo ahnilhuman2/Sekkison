@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,34 +27,32 @@ public class AppointService {
     private final UserRepository userRepository;
 
     // 약속 만들기 (input : user_id, appoint 정보)
-    public ResponseForm createAppoint(Long user_id, Appoint appoint) {
+    public ResponseForm createAppoint(Long user_id, Appoint appoint, Integer typeInteger,
+                                      String date, String time) {
         ResponseForm res = new ResponseForm();
 
         // title이 비어있다면 에러
         if (appoint.getTitle() == null || appoint.getTitle().trim().equals(""))
-            res.setError("제목이 비어있습니다");
-
+            return res.setError("제목이 비어있습니다");
         // d-day가 비어있다면 에러
-        if (appoint.getDDay() == null) return res.setError("날짜와 시간이 비어있습니다");
+        if (date == null || "".equals(date) || time == null || "".equals(time))
+            return res.setError("날짜와 시간이 비어있습니다");
 
         // content가 null 이면 content를 빈 문자열로 초기화
         if (appoint.getContent() == null) appoint.setContent("");
-
         // head_cnt를 1로 세팅 (최초 생성이기 때문)
         appoint.setHeadCnt(1);
+        // 나만의 약속이라면 maxCnt 1로 세팅
+        if (typeInteger == 2) appoint.setMaxCnt(1);
+        // dday 세팅
+        appoint.setDDay(makeDateTime(date, time));
 
         // type 세팅
-        if (appoint.getType() == null) {
-            if (appoint.getMaxCnt() == null)
-                appoint.setType(C.appointType.SOLO);
-            else if (appoint.getPosX() == null && appoint.getPosY() == null)
-                appoint.setType(C.appointType.NFTF);
-            else
-                appoint.setType(C.appointType.FTF);
-        }
-
-        // max_cnt가 비어있다면(나만의 약속) 1로 세팅
-        if (appoint.getMaxCnt() == null) appoint.setMaxCnt(1);
+        C.appointType type;
+        if (typeInteger == 0) type = C.appointType.FTF;
+        else if (typeInteger == 1) type = C.appointType.NFTF;
+        else type = C.appointType.SOLO;
+        appoint.setType(type);
 
         // appoint 저장
         appoint = appointRepository.save(appoint);
@@ -66,9 +65,18 @@ public class AppointService {
 
         // myAppoint 저장
         myAppointRepository.save(myAppoint);
-        res.setSuccess(null);
         setHeadCnt(appoint.getId());
-        return res;
+        return res.setSuccess(appoint.getId());
+    }
+    private LocalDateTime makeDateTime(String date, String time) {
+        String[] dates = date.split("\\.");
+        String[] times = time.split(":");
+        Integer y = Integer.parseInt(dates[0]);
+        Integer m = Integer.parseInt(dates[1]);
+        Integer d = Integer.parseInt(dates[2]);
+        Integer hh = Integer.parseInt(times[0]);
+        Integer mm = Integer.parseInt(times[1]);
+        return LocalDateTime.of(y, m, d, hh, mm, 00);
     }
     // 약속 정보 가져오기 (input : appoint_id)
     public ResponseForm readAppoint(Long appointId) {
@@ -168,12 +176,12 @@ public class AppointService {
         for(Appoint a : appointList.getContent()) {
             List<MyAppoint> ma = myAppointRepository.findByAppointIdAndIsMaster(a.getId(), true);
             if (ma == null || ma.size() == 0) {
-                a.setMemo("unknown");
+                a.setMemo("0&unknown");
                 continue;
             }
             User u = userRepository.findById(ma.get(0).getUserId()).orElse(null);
             if (u == null) {
-                a.setMemo("unknown");
+                a.setMemo("0&unknown");
                 continue;
             }
             a.setMemo(u.getId() + "&" + u.getName());
