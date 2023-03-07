@@ -70,14 +70,6 @@ public class UserFileService {
         return fileName;
     }
 
-//    public java.io.File getFile1(Long userId) throws FileNotFoundException {
-//        UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
-//        if (userFile == null) {
-//            throw new FileNotFoundException("User file not found.");
-//        }
-//        return new java.io.File(userFile.getFile());
-//    }
-
     public String getFile(Long userId) {
         UserFile userFile = userFileRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("UserFile not found with userId: " + userId));
