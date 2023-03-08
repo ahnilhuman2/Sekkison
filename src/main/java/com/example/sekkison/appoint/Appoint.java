@@ -31,7 +31,7 @@ public class Appoint extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(length = 500, name = "content", nullable = false)
     private String content;
 
     @Column(name = "pos_x")
@@ -39,6 +39,12 @@ public class Appoint extends BaseEntity {
 
     @Column(name = "pos_y")
     private Double posY;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "address_detail")
     @ColumnDefault("''")

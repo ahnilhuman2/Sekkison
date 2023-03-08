@@ -14,8 +14,12 @@ public class AppointController {
     @PostMapping("/{user_id}")
     // 약속 만들기
     public ResponseForm create(
-            @PathVariable("user_id") Long user_id, Appoint appoint) {
-        return appointService.createAppoint(user_id, appoint);
+            @PathVariable("user_id") Long user_id,
+            Appoint appoint,
+            Integer typeInteger,
+            String date,
+            String time) {
+        return appointService.createAppoint(user_id, appoint, typeInteger, date, time);
     }
     @ResponseBody
     @GetMapping("/{appoint_id}")
