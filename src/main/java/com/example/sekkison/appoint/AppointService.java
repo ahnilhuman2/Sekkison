@@ -42,10 +42,14 @@ public class AppointService {
         if (appoint.getContent() == null) appoint.setContent("");
         // head_cnt를 1로 세팅 (최초 생성이기 때문)
         appoint.setHeadCnt(1);
-        // 나만의 약속이라면 maxCnt 1로 세팅
-        if (typeInteger == 2) appoint.setMaxCnt(1);
+        // 나만의 약속이라면 maxCnt 1, isPublic null로 세팅
+        if (typeInteger == 2) {
+            appoint.setMaxCnt(1);
+            appoint.setIsPublic(null);
+        }
+
         // dday 세팅
-        appoint.setDDay(makeDateTime(date, time));
+        appoint.setDday(makeDateTime(date, time));
 
         // type 세팅
         C.appointType type;
@@ -167,7 +171,8 @@ public class AppointService {
 
         // 조건에 맞는 appoint리스트 생성
         Page<Appoint> appointList =
-                appointRepository.findByIsPublicAndIsRecruitAndTitleContains(is_public, is_recruit, search, pageable);
+                appointRepository.findByIsPublicAndIsRecruitAndTitleContainsAndDdayAfter(
+                        is_public, is_recruit, search, LocalDateTime.now() ,pageable);
 
         // 불러올 약속이 없으면 에러
         if (appointList.getContent().size() == 0) return res.setError("더이상 약속이 없습니다");
