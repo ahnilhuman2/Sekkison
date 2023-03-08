@@ -22,18 +22,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserFileService {
 
+    // 파일 경로
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    // 이미지 파일은 최대 5MB
     private static final long MAX_IMAGE_SIZE = 5242880;
 
     private final UserFileRepository userFileRepository;
-    private final UserRepository userRepository;
 
+    // 프로필 올리기
     public ResponseForm uploadFile(Long userId, MultipartFile file) throws IOException {
         ResponseForm responseForm = new ResponseForm();
+
+        // 파일이 없거나 빈파일이면 레파지토리에서 userId 기준으로 탐색
         if (file.isEmpty() || "".equals(file.getName())) {
             UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
+
+            // 파일이 없고 기본 파일이 아니면 파일 삭제 후 기본 파일로 저장
             if (userFile != null && !userFile.getFile().equals("default.jpg"))
                 new File(uploadDir + "/" + userFile.getFile()).delete();
             userFile.setFile("default.jpg");
@@ -46,9 +52,11 @@ public class UserFileService {
             throw new RuntimeException("이미지 크기가 너무 큽니다.");
         }
 
+        // 이미지 저장
         String fileName = writeFile(file);
-
         UserFile userFile = userFileRepository.findByUserId(userId).orElse(null);
+
+        // 파일이 없고 기본 파일이 아니면 저장
         if (userFile != null && !userFile.getFile().equals("default.jpg"))
             new File(uploadDir + "/" + userFile.getFile()).delete();
 
@@ -70,6 +78,7 @@ public class UserFileService {
         return fileName;
     }
 
+    // userId 기준으로 파일 가져오기 후에 controller에서 처리
     public String getFile(Long userId) {
         UserFile userFile = userFileRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("UserFile not found with userId: " + userId));

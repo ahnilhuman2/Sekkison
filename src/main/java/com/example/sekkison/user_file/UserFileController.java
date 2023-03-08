@@ -19,9 +19,11 @@ public class UserFileController {
 
     private final UserFileService userFileService;
 
+    // 파일저장 경로
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    // 프로필 업로드
     @ResponseBody
     @PostMapping("/upload")
     public ResponseForm uploadFile(@RequestParam("file") MultipartFile file,
@@ -33,10 +35,10 @@ public class UserFileController {
         }
     }
 
+    // 프로필 불러오기
     @GetMapping( value = "/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getImageWithMediaType(@PathVariable("userId") Long userId) throws IOException {
         String imageName = userFileService.getFile(userId);
-//        InputStream in = getClass().getResourceAsStream(uploadDir + "/" + imageName);
         InputStream in = new FileInputStream(uploadDir + "/" + imageName);
 
         return IOUtils.toByteArray(in);
