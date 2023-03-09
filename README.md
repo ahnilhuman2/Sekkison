@@ -1,11 +1,12 @@
 # Sekkison
-# JPA Repository를 이용한 RestApi 구현 / Spring Security (BcrpitPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
+# JPA Repository / RestApi 구현 / Spring Security (BcrpitPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
 
 ## 구현 완료
 **Function** | **완료** | 
 :------------ | :-------------|  
 **회원가입 / 로그인 구현 ** | :heavy_check_mark: |  
-**Spring Security BcriptPasswordEncoder 비밀번호 암호화** | :heavy_check_mark: |  
+**Spring Security BcryptPasswordEncoder 비밀번호 암호화** | :heavy_check_mark: |  
+**BcryptPasswordEncoder 비밀번호 암호화** | :heavy_check_mark: |  
 **약속 작성, 수정, 삭제, 리스트** | :heavy_check_mark: |  
 **친구 추가, 초대, 리스트** | :heavy_check_mark: | 
 **약속 추가, 초대, 리스트** | :heavy_check_mark: |  
