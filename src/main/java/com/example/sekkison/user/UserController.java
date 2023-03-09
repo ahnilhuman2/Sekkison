@@ -93,4 +93,11 @@ public class UserController {
             String str) {
         return userService.updateName(param, userId, str);
     }
+
+    @ResponseBody
+    @GetMapping("/search/invite/{userId}/{appointId}")
+    // 유저 검색
+    public ResponseForm search(String str, @PathVariable("userId") Long userId) {
+        return userService.searchInviteUser(str, userId, appointId);
+    }
 }

@@ -9,6 +9,8 @@ import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
 import com.example.sekkison.invite.Invite;
 import com.example.sekkison.invite.InviteRepository;
+import com.example.sekkison.my_appoint.MyAppoint;
+import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user_authority.UserAuthority;
 import com.example.sekkison.user_authority.UserAuthorityRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -39,6 +38,7 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final AppointRepository appointRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MyAppointRepository myAppointRepository;
 
     // 회원 가입(input user)
     public ResponseForm register(User user) {
@@ -347,5 +347,49 @@ public class UserService {
         }
         userRepository.save(user);
         return res.setSuccess(null);
+    }
+
+    // 약속에 초대할 유저 검색
+    public ResponseForm searchInviteUser(String str, Long userId, Long appointId) {
+        ResponseForm responseForm = new ResponseForm();
+
+        // 입력된 String값을 기준으로 user검색
+        List<User> users = userRepository.findByNameContains(str);
+
+        User removeUser = null;
+        for(int i = 0; i < users.size(); i++) {
+            Long fromId = userId;
+            Long toId = users.get(i).getId();
+            if (fromId == toId) removeUser = users.get(i);
+
+            Friend f = friendRepository.findByToIdAndFromId(toId, fromId);
+            if (f == null) users.get(i).setMemo("X");
+            else {
+                if (f.getIsAccepted()) users.get(i).setMemo("O");
+                else users.get(i).setMemo("-");
+            }
+        }
+        if (removeUser != null) users.remove(removeUser);
+
+        // 이미 초대되어 제외할 유저 저장
+        List<Invite> invites = inviteRepository.findByAppointId(appointId);
+        Set<Long> delIds = new HashSet<>();
+        for(Invite i : invites) delIds.add(i.getToId());
+
+        // 이미 참가중이라 제외할 유저 저장
+        List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
+        for(MyAppoint ma : myAppoints) delIds.add(ma.getUserId());
+
+        // 제외대상 제외
+        List<User> usersCopy = new ArrayList<>(users);
+        for(User u : usersCopy)
+            if (delIds.contains(u.getId()))
+                users.remove(u);
+
+        // 없을시 error
+        if (users == null || users.size() == 0) {
+            responseForm.setError("해당 유저가 없습니다");
+        }
+        return responseForm.setSuccess(users);
     }
 }

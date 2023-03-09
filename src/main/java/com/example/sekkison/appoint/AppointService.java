@@ -2,6 +2,8 @@ package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.C;
 import com.example.sekkison.common.ResponseForm;
+import com.example.sekkison.invite.Invite;
+import com.example.sekkison.invite.InviteRepository;
 import com.example.sekkison.my_appoint.MyAppoint;
 import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user.User;
@@ -25,6 +27,7 @@ public class AppointService {
     private final AppointRepository appointRepository;
     private final MyAppointRepository myAppointRepository;
     private final UserRepository userRepository;
+    private final InviteRepository inviteRepository;
 
     // 약속 만들기 (input : user_id, appoint 정보)
     public ResponseForm createAppoint(Long user_id, Appoint appoint, Integer typeInteger,
@@ -195,7 +198,7 @@ public class AppointService {
         return res.setSuccess(appointList.getContent());
     }
     // 약속에 참가한 멤버 인원수가 변할 때마다(myAppoint 삭제/추가) 갱신할것
-    private void setHeadCnt(Long appoint_id) {
+    public void setHeadCnt(Long appoint_id) {
         // appoint, myappointList 가져오기
         Appoint appoint = appointRepository.findById(appoint_id).orElse(null);
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appoint.getId());
@@ -217,6 +220,10 @@ public class AppointService {
         // myAppoints 삭제
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
         for(MyAppoint ma : myAppoints) myAppointRepository.delete(ma);
+
+        // invites 삭제
+        List<Invite> invites = inviteRepository.findByAppointId(appointId);
+        for(Invite i : invites) inviteRepository.delete(i);
 
         // appoint 삭제
         Appoint appoint = appointRepository.findById(appointId).orElse(null);
