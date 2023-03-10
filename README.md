@@ -1,6 +1,9 @@
 # Sekkison
 # JPA Repository / RestApi 구현 / Spring Security (BcrpitPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
 
+<p align="">
+<img width="500" alt="erd8" src="https://user-images.githubusercontent.com/112387307/224238495-a9c011b0-d17a-46ba-9db7-474046386001.png">
+
 ## 구현 완료
 **Function** | **완료** | 
 :------------ | :-------------|  
@@ -32,29 +35,43 @@
 
 ### 테스트 전용 로그인 회원
 **User**
-> - ID : lion
->
-> - PW : kk1234
+> - ID : user1
+> - PW : 1234
 <hr>
 
 ## 🔽 RestAPI EndPoint
 
-| METHOD | URI                                | 기능               | RequestBody                                      |인증필요             |
-| ------ | ---------------------------------- |---------------------------| ------------------------------------- |----------- |
-| POST   | /api/v1/**users**/join                 | 회원가입                      | {"username": "string","password":"string"} |  | 
-| POST   | /api/v1/**users**/login                | 로그인                       | {"username": "string","password":"string"} | | 
-| POST   | /api/v1/**users**/{userId}/role/change | 회원 등급 변경(ADMIN 등급만 가능)    | { "role": "string" }                       |✔ | 
-| GET    | /api/v1/**users**/{id}                      |회원 단건 조회(ADMIN 등급만 가능)  |                                           | ✔| 
-| GET    | /api/v1/**users**/                      |회원 전체 조회(ADMIN 등급만 가능)  |                                           | ✔| 
-| GET    | /api/v1/**posts**                      | 게시글 조회(최신 글 20개 페이징 처리)   |                                           | | 
-| GET    | /api/v1/**posts**/{postId}             | 특정 게시글 상세 조회              |                                           | | 
-| POST   | /api/v1/**posts**                      | 게시글 작성 (jwt 토큰 인증 필요) | { "title": "string" , "body": "string"}    |✔ | 
-| PUT    | /api/v1/**posts**/{postId}             | 게시글 수정 (jwt 토큰 인증 필요) | { "title": "string" , "body": "string"}    |✔ | 
-| DELETE | /api/v1/**posts**/{postId}             | 게시글 삭제 (Soft Delete 적용) |                                           | ✔| 
-| GET | /api/v1/**posts**/my           | 내가 쓴 포스트 보기(최신순,20개) |                                           |✔ | 
-| GET | /api/v1/**alarms**          | 알림 보기(최신순,20개) |                                           | | 
-| POST | /api/v1/**posts**/{postId}/likes        | 게시글 좋아요 기능 (jwt 토큰 인증 필요) |                                           |✔ | 
-| POST | /api/v1/{id}/**comments**            | 해당 게시글 댓글 달기 |  { "comment": "string" }                                          |✔ | 
-| PUT | /api/v1/{id}/**comments**             | 해당 게시글 댓글 수정 |           { "comment": "string" }                                 |✔ | 
-| DELETE | /api/v1/{id}/**comments**             | 해당 게시글 댓글 삭제 (Soft Delete 적용) |                                           |✔ | 
-| GET | /api/v1/{id}/**comments**            | 해당 게시글 댓글 조회(페이징,최신순) |                                           | | 
+| METHOD | URI                                | 기능                                                     |
+| ------ | ---------------------------------- |--------------------------- |
+| POST   | /**users**                | 회원가입                        | 
+| POST   | /**users**/login                | 로그인                       | 
+| GET   | /**users**/{userId}       | User객체 반환                      | 
+| PUT    | /**users**/{userId}                      | 회원정보수정                                            |
+| DELETE | /**users**/{userId}                     |회원탈퇴                                         | 
+| GET    | /**users**/duplicated/{parameter}      | 아이디, 별명, 전화번호 중복체크                           | 
+| GET    | /**users**/my_list/{userId}/{parameter}  | 친구 초대 리스트, 약속 초대 리스트                                 | 
+| PUT   | /**users**/{param}/{userId}     | 별명, content 정보수정    |
+| GET    | /**users**/search/invite/{userId}/{appointId}{postId}| 약속에 초대할 유저 검색     |
+| POST | /**upload**/upload             | 프로필 업로드                                           |
+| GET | /**upload**/{userId}           | 프로필 불러오기                                          |
+| POST | /**appoints**/{userId}          | 약속 만들기 |                      
+| GET | /**appoints**/{userId}/{appointId}        | 약속 가져오기                                          |
+| PUT | /**appoints**/{appointId}/{userId}             | 약속 수정                                       | 
+| DELETE | /**appoints**/{userId}/{appointId}             | 약속 삭제                                |
+| GET | /**appoints**/members/{appointId}| 멤버 별명 가져오기                                        |
+| DELETE | /**appoints**/members/{appoint_id}/{from_id}/{to_id} | 약속 멤버 강퇴                | 
+| GET | /**appoints**/search/{is_public}/{is_recruit}/{page} | 약속 최대인원 수정                | 
+| PUT | /**appoints**/setCount/{appoint_id}/{user_id}/{count} | 약속 멤버 강퇴                |  
+| GET | /**appoints**/list/{userId}/{page}| 내약속목록 가져오기               | 
+| DELETE | /**friends**/{friendId} | 친구초대 거절              | 
+| POST | /**friends**/ | 친구초대 보내기               |  
+| POST | /**friends**/accept/{friendId} | 친구초대 수락                | 
+| GET | /**friends**/list{userId} | 친구목록                | 
+| DELETE | /**invites**/{inviteId} | 약속초대 거절                | 
+| POST | /**invites**//{appointId}/{fromId}/{toId} | 초대보내기                | 
+| GET | /**messages**/list/{userId} | 쪽지 목록                | 
+| DELETE | /**messages**/{userId} | 쪽지 삭제           | 
+| POST | /**messages** | 쪽지 보내기                | 
+| GET | /**myAppoints**/is_master/{userId}/{appointId} | 방장 여부               | 
+| POST | /**myAppoints**/{userId}/{appointId} | 약속 참가              | 
+| DELETE | /**myAppoints**/{userId}/{appointId} | 약속 나가기           | 
