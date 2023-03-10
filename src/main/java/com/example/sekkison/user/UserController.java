@@ -96,8 +96,11 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/search/invite/{userId}/{appointId}")
-    // 유저 검색
-    public ResponseForm search(String str, @PathVariable("userId") Long userId) {
+    // 약속에 초대할 유저 검색
+    public ResponseForm search(
+            String str,
+            @PathVariable("userId") Long userId,
+            @PathVariable("appointId") Long appointId) {
         return userService.searchInviteUser(str, userId, appointId);
     }
 }

@@ -306,9 +306,9 @@ public class UserService {
         if (removeUser != null) users.remove(removeUser);
 
         // 없을시 error
-        if (users == null || users.size() == 0) {
-            responseForm.setError("해당 유저가 없습니다");
-        }
+        if (users == null || users.size() == 0)
+            return responseForm.setError("해당 유저가 없습니다");
+
         return responseForm.setSuccess(users);
     }
 
@@ -351,45 +351,50 @@ public class UserService {
 
     // 약속에 초대할 유저 검색
     public ResponseForm searchInviteUser(String str, Long userId, Long appointId) {
-        ResponseForm responseForm = new ResponseForm();
 
         // 입력된 String값을 기준으로 user검색
         List<User> users = userRepository.findByNameContains(str);
 
-        User removeUser = null;
+        List<User> removeUsers = new ArrayList<>();
         for(int i = 0; i < users.size(); i++) {
             Long fromId = userId;
             Long toId = users.get(i).getId();
-            if (fromId == toId) removeUser = users.get(i);
+            if (fromId == toId) removeUsers.add(users.get(i));
 
             Friend f = friendRepository.findByToIdAndFromId(toId, fromId);
-            if (f == null) users.get(i).setMemo("X");
+            if (f == null) removeUsers.add(users.get(i));
             else {
-                if (f.getIsAccepted()) users.get(i).setMemo("O");
-                else users.get(i).setMemo("-");
+                if (f.getIsAccepted()) users.get(i).setMemo("X");
+                else removeUsers.add(users.get(i));
             }
         }
-        if (removeUser != null) users.remove(removeUser);
+        if (removeUsers != null && removeUsers.size() != 0)
+            for(User u : removeUsers) users.remove(u);
 
         // 이미 초대되어 제외할 유저 저장
         List<Invite> invites = inviteRepository.findByAppointId(appointId);
-        Set<Long> delIds = new HashSet<>();
-        for(Invite i : invites) delIds.add(i.getToId());
+        Set<Long> invited = new HashSet<>();
+        for(Invite i : invites) invited.add(i.getToId());
+
+        // 초대중으로 세팅
+        for(User u : users)
+            if (invited.contains(u.getId()))
+                u.setMemo("-");
 
         // 이미 참가중이라 제외할 유저 저장
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
-        for(MyAppoint ma : myAppoints) delIds.add(ma.getUserId());
+        Set<Long> inviting = new HashSet<>();
+        for(MyAppoint ma : myAppoints) inviting.add(ma.getUserId());
 
-        // 제외대상 제외
-        List<User> usersCopy = new ArrayList<>(users);
-        for(User u : usersCopy)
-            if (delIds.contains(u.getId()))
-                users.remove(u);
+        // 참가중으로 세팅
+        for(User u : users)
+            if (inviting.contains(u.getId()))
+                u.setMemo("O");
 
         // 없을시 error
-        if (users == null || users.size() == 0) {
-            responseForm.setError("해당 유저가 없습니다");
-        }
-        return responseForm.setSuccess(users);
+        if (users == null || users.size() == 0)
+            return new ResponseForm().setError("해당 유저가 없습니다");
+
+        return new ResponseForm().setSuccess(users);
     }
 }

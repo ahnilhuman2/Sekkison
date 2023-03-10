@@ -86,13 +86,18 @@ public class AppointService {
         return LocalDateTime.of(y, m, d, hh, mm, 00);
     }
     // 약속 정보 가져오기 (input : appoint_id)
-    public ResponseForm readAppoint(Long appointId) {
+    public ResponseForm readAppoint(Long userId, Long appointId) {
         ResponseForm res = new ResponseForm();
 
         Appoint appoint = appointRepository.findById(appointId).orElse(null);
 
         // id로 찾을 수 없으면
         if (appoint == null) return res.setError("약속이 존재하지 않습니다");
+
+        MyAppoint me_ma = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
+        List<Invite> me_i = inviteRepository.findByToIdAndAppointId(userId, appointId);
+        if (!appoint.getIsPublic() && me_ma == null && (me_i == null || me_i.size() == 0))
+            return res.setError("권한이 없습니다");
 
         // memo에 방장 이름 세팅
         List<MyAppoint> ma = myAppointRepository.findByAppointIdAndIsMaster(appoint.getId(), true);
@@ -207,7 +212,7 @@ public class AppointService {
         appoint.setHeadCnt(myAppoints.size());
 
         // headCnt, maxCnt 같다면 isRecruit false, 다르다면 isRecruit true
-        appoint.setIsRecruit(appoint.getHeadCnt() == appoint.getMaxCnt() ? false : true);
+        appoint.setIsRecruit(appoint.getHeadCnt() >= appoint.getMaxCnt() ? false : true);
         appointRepository.save(appoint);
     }
     // 약속 삭제

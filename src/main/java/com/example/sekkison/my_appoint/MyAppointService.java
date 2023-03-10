@@ -1,5 +1,7 @@
 package com.example.sekkison.my_appoint;
 
+import com.example.sekkison.appoint.Appoint;
+import com.example.sekkison.appoint.AppointRepository;
 import com.example.sekkison.appoint.AppointService;
 import com.example.sekkison.common.ResponseForm;
 import com.example.sekkison.invite.Invite;
@@ -20,6 +22,7 @@ public class MyAppointService {
     private final AppointService appointService;
     private final InviteRepository inviteRepository;
     private final UserRepository userRepository;
+    private final AppointRepository appointRepository;
 
     public ResponseForm isMaster(Long userId, Long appointId) {
         ResponseForm responseForm = new ResponseForm();
@@ -30,6 +33,10 @@ public class MyAppointService {
     // 참가
     public ResponseForm participate(Long userId, Long appointId) {
         ResponseForm responseForm = new ResponseForm();
+
+        Appoint appoint = appointRepository.findById(appointId).orElse(null);
+        if (!appoint.getIsRecruit()) return responseForm.setError("방이 가득 찼습니다");
+
         MyAppoint participateRoom = MyAppoint.builder()
                 .userId(userId).appointId(appointId).isMaster(false)
                 .build();
