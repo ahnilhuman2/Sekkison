@@ -88,4 +88,13 @@ public class AppointController {
             @PathVariable("page") Integer page){
         return appointService.getMyAppointList(userId, page);
     }
+    @ResponseBody
+    @GetMapping("/calender/{userId}/{year}/{month}")
+    // 해당 달의 내 약속 가져오기
+    public ResponseForm getCalenderAppoint(
+            @PathVariable("userId") Long userId,
+            @PathVariable("year") Integer year,
+            @PathVariable("month") Integer month) {
+        return appointService.getCalenderAppoint(userId, year, month);
+    }
 }

@@ -96,7 +96,8 @@ public class AppointService {
 
         MyAppoint me_ma = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
         List<Invite> me_i = inviteRepository.findByToIdAndAppointId(userId, appointId);
-        if (!appoint.getIsPublic() && me_ma == null && (me_i == null || me_i.size() == 0))
+        if ((appoint.getIsPublic() == null || !appoint.getIsPublic()) &&
+                me_ma == null && (me_i == null || me_i.size() == 0))
             return res.setError("권한이 없습니다");
 
         // memo에 방장 이름 세팅
@@ -278,5 +279,23 @@ public class AppointService {
             appointList.add(a);
         }
         return res.setSuccess(appointList);
+    }
+    // 해당 날짜의 내 약속 가져오기
+    public ResponseForm getCalenderAppoint(Long userId, Integer year, Integer month) {
+        List<List<Appoint>> data = new ArrayList<>();
+        for(int i = 0; i < 32; i++) data.add(new ArrayList<>());
+
+        // 내 약속 가져오기
+        List<MyAppoint> mas = myAppointRepository.findByUserId(userId);
+        for(MyAppoint ma : mas) {
+            Appoint a = appointRepository.findById(ma.getAppointId()).orElse(null);
+            LocalDateTime t = a.getDday();
+
+            // 해당 날짜가 아니면 패스
+            if (t.getYear() != year) continue;
+            if (t.getMonthValue() != month) continue;
+            data.get(t.getDayOfMonth()).add(a);
+        }
+        return new ResponseForm().setSuccess(data);
     }
 }
