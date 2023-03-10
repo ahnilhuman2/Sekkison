@@ -58,7 +58,7 @@ public class Appoint extends BaseEntity {
 
     @Column(name = "d_day", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime dDay;
+    private LocalDateTime dday;
 
     @Column(name = "is_public")
     @ColumnDefault(value = "false")

@@ -22,11 +22,12 @@ public class AppointController {
         return appointService.createAppoint(user_id, appoint, typeInteger, date, time);
     }
     @ResponseBody
-    @GetMapping("/{appoint_id}")
+    @GetMapping("/{userId}/{appoint_id}")
     // 약속 가져오기
     public ResponseForm read(
+            @PathVariable("userId") Long userId,
             @PathVariable("appoint_id") Long appoint_id) {
-        return appointService.readAppoint(appoint_id);
+        return appointService.readAppoint(userId, appoint_id);
     }
     @ResponseBody
     @PutMapping("/{appoint_id}/{user_id}")

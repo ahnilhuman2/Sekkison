@@ -9,6 +9,8 @@ import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
 import com.example.sekkison.invite.Invite;
 import com.example.sekkison.invite.InviteRepository;
+import com.example.sekkison.my_appoint.MyAppoint;
+import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user_authority.UserAuthority;
 import com.example.sekkison.user_authority.UserAuthorityRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -39,6 +38,7 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final AppointRepository appointRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MyAppointRepository myAppointRepository;
 
     // 회원 가입(input user)
     public ResponseForm register(User user) {
@@ -306,9 +306,9 @@ public class UserService {
         if (removeUser != null) users.remove(removeUser);
 
         // 없을시 error
-        if (users == null || users.size() == 0) {
-            responseForm.setError("해당 유저가 없습니다");
-        }
+        if (users == null || users.size() == 0)
+            return responseForm.setError("해당 유저가 없습니다");
+
         return responseForm.setSuccess(users);
     }
 
@@ -347,5 +347,54 @@ public class UserService {
         }
         userRepository.save(user);
         return res.setSuccess(null);
+    }
+
+    // 약속에 초대할 유저 검색
+    public ResponseForm searchInviteUser(String str, Long userId, Long appointId) {
+
+        // 입력된 String값을 기준으로 user검색
+        List<User> users = userRepository.findByNameContains(str);
+
+        List<User> removeUsers = new ArrayList<>();
+        for(int i = 0; i < users.size(); i++) {
+            Long fromId = userId;
+            Long toId = users.get(i).getId();
+            if (fromId == toId) removeUsers.add(users.get(i));
+
+            Friend f = friendRepository.findByToIdAndFromId(toId, fromId);
+            if (f == null) removeUsers.add(users.get(i));
+            else {
+                if (f.getIsAccepted()) users.get(i).setMemo("X");
+                else removeUsers.add(users.get(i));
+            }
+        }
+        if (removeUsers != null && removeUsers.size() != 0)
+            for(User u : removeUsers) users.remove(u);
+
+        // 이미 초대되어 제외할 유저 저장
+        List<Invite> invites = inviteRepository.findByAppointId(appointId);
+        Set<Long> invited = new HashSet<>();
+        for(Invite i : invites) invited.add(i.getToId());
+
+        // 초대중으로 세팅
+        for(User u : users)
+            if (invited.contains(u.getId()))
+                u.setMemo("-");
+
+        // 이미 참가중이라 제외할 유저 저장
+        List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
+        Set<Long> inviting = new HashSet<>();
+        for(MyAppoint ma : myAppoints) inviting.add(ma.getUserId());
+
+        // 참가중으로 세팅
+        for(User u : users)
+            if (inviting.contains(u.getId()))
+                u.setMemo("O");
+
+        // 없을시 error
+        if (users == null || users.size() == 0)
+            return new ResponseForm().setError("해당 유저가 없습니다");
+
+        return new ResponseForm().setSuccess(users);
     }
 }

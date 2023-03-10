@@ -20,4 +20,16 @@ public class InviteService {
         inviteRepository.delete(deleteInvite);
         return responseForm.setSuccess(null);
     }
+
+    // 약속 초대
+    public ResponseForm invite(Long appointId, Long fromId, Long toId) {
+        ResponseForm res = new ResponseForm();
+        Invite invite = Invite.builder()
+                .appointId(appointId)
+                .fromId(fromId)
+                .toId(toId).build();
+        inviteRepository.save(invite);
+        return res.setSuccess(null);
+    }
+
 }
