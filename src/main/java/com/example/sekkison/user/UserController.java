@@ -103,4 +103,13 @@ public class UserController {
             @PathVariable("appointId") Long appointId) {
         return userService.searchInviteUser(str, userId, appointId);
     }
+
+    @ResponseBody
+    @GetMapping("/alarm/{userId}/{param}")
+    // 알람 개수 리턴(param 0:쪽지, 1:초대)
+    public ResponseForm getAlarm(
+            @PathVariable("userId") Long userId,
+            @PathVariable("param") Integer param) {
+        return userService.getAlarm(userId, param);
+    }
 }
