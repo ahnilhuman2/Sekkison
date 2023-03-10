@@ -2,6 +2,8 @@ package com.example.sekkison.appoint;
 
 import com.example.sekkison.common.C;
 import com.example.sekkison.common.ResponseForm;
+import com.example.sekkison.invite.Invite;
+import com.example.sekkison.invite.InviteRepository;
 import com.example.sekkison.my_appoint.MyAppoint;
 import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user.User;
@@ -25,6 +27,7 @@ public class AppointService {
     private final AppointRepository appointRepository;
     private final MyAppointRepository myAppointRepository;
     private final UserRepository userRepository;
+    private final InviteRepository inviteRepository;
 
     // 약속 만들기 (input : user_id, appoint 정보)
     public ResponseForm createAppoint(Long user_id, Appoint appoint, Integer typeInteger,
@@ -42,10 +45,14 @@ public class AppointService {
         if (appoint.getContent() == null) appoint.setContent("");
         // head_cnt를 1로 세팅 (최초 생성이기 때문)
         appoint.setHeadCnt(1);
-        // 나만의 약속이라면 maxCnt 1로 세팅
-        if (typeInteger == 2) appoint.setMaxCnt(1);
+        // 나만의 약속이라면 maxCnt 1, isPublic null로 세팅
+        if (typeInteger == 2) {
+            appoint.setMaxCnt(1);
+            appoint.setIsPublic(null);
+        }
+
         // dday 세팅
-        appoint.setDDay(makeDateTime(date, time));
+        appoint.setDday(makeDateTime(date, time));
 
         // type 세팅
         C.appointType type;
@@ -79,13 +86,18 @@ public class AppointService {
         return LocalDateTime.of(y, m, d, hh, mm, 00);
     }
     // 약속 정보 가져오기 (input : appoint_id)
-    public ResponseForm readAppoint(Long appointId) {
+    public ResponseForm readAppoint(Long userId, Long appointId) {
         ResponseForm res = new ResponseForm();
 
         Appoint appoint = appointRepository.findById(appointId).orElse(null);
 
         // id로 찾을 수 없으면
         if (appoint == null) return res.setError("약속이 존재하지 않습니다");
+
+        MyAppoint me_ma = myAppointRepository.findByUserIdAndAppointId(userId, appointId);
+        List<Invite> me_i = inviteRepository.findByToIdAndAppointId(userId, appointId);
+        if (!appoint.getIsPublic() && me_ma == null && (me_i == null || me_i.size() == 0))
+            return res.setError("권한이 없습니다");
 
         // memo에 방장 이름 세팅
         List<MyAppoint> ma = myAppointRepository.findByAppointIdAndIsMaster(appoint.getId(), true);
@@ -167,7 +179,8 @@ public class AppointService {
 
         // 조건에 맞는 appoint리스트 생성
         Page<Appoint> appointList =
-                appointRepository.findByIsPublicAndIsRecruitAndTitleContains(is_public, is_recruit, search, pageable);
+                appointRepository.findByIsPublicAndIsRecruitAndTitleContainsAndDdayAfter(
+                        is_public, is_recruit, search, LocalDateTime.now() ,pageable);
 
         // 불러올 약속이 없으면 에러
         if (appointList.getContent().size() == 0) return res.setError("더이상 약속이 없습니다");
@@ -190,7 +203,7 @@ public class AppointService {
         return res.setSuccess(appointList.getContent());
     }
     // 약속에 참가한 멤버 인원수가 변할 때마다(myAppoint 삭제/추가) 갱신할것
-    private void setHeadCnt(Long appoint_id) {
+    public void setHeadCnt(Long appoint_id) {
         // appoint, myappointList 가져오기
         Appoint appoint = appointRepository.findById(appoint_id).orElse(null);
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appoint.getId());
@@ -199,7 +212,7 @@ public class AppointService {
         appoint.setHeadCnt(myAppoints.size());
 
         // headCnt, maxCnt 같다면 isRecruit false, 다르다면 isRecruit true
-        appoint.setIsRecruit(appoint.getHeadCnt() == appoint.getMaxCnt() ? false : true);
+        appoint.setIsRecruit(appoint.getHeadCnt() >= appoint.getMaxCnt() ? false : true);
         appointRepository.save(appoint);
     }
     // 약속 삭제
@@ -212,6 +225,10 @@ public class AppointService {
         // myAppoints 삭제
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
         for(MyAppoint ma : myAppoints) myAppointRepository.delete(ma);
+
+        // invites 삭제
+        List<Invite> invites = inviteRepository.findByAppointId(appointId);
+        for(Invite i : invites) inviteRepository.delete(i);
 
         // appoint 삭제
         Appoint appoint = appointRepository.findById(appointId).orElse(null);

@@ -17,4 +17,15 @@ public class InviteController {
     public ResponseForm deny(@PathVariable("inviteId") Long inviteId) {
         return inviteService.deny(inviteId);
     }
+
+    @ResponseBody
+    @PostMapping("/{appointId}/{fromId}/{toId}")
+    // 초대보내기
+    public ResponseForm invite(
+            @PathVariable("appointId") Long appointId,
+            @PathVariable("fromId") Long fromId,
+            @PathVariable("toId") Long toId
+            ) {
+        return inviteService.invite(appointId, fromId, toId);
+    }
 }
