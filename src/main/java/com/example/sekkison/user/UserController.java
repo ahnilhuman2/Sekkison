@@ -112,4 +112,18 @@ public class UserController {
             @PathVariable("param") Integer param) {
         return userService.getAlarm(userId, param);
     }
+
+    @ResponseBody
+    @PostMapping("/apiRegister/{param}")
+    public ResponseForm apiRegister(User user, @PathVariable("param") Integer param) {
+        return userService.apiRegister(user, param);
+    }
+
+    @ResponseBody
+    @GetMapping("/find")
+    // id로 user객체 받기
+    public ResponseForm returnUser(String username) {
+
+        return userService.findUser(username);
+    }
 }

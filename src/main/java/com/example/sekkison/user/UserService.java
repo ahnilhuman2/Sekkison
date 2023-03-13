@@ -60,7 +60,7 @@ public class UserService {
         if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요");
 
         // 가입 아이디 길이 제한
-        if (username.length() < 4 || username.length() >10) {
+        if (username.length() < 4 || username.length() > 10) {
             responseForm.setError("아이디는 4자 이상 10자 이하여야 합니다");
             return responseForm;
         }
@@ -165,7 +165,7 @@ public class UserService {
         // 비거나, 비밀번호 양식 틀릴시 error
         if (password == null || !Pattern.matches("^[a-zA-Z\\d`~!@#$%^&*()-_=+]{8,16}$", password)) {
             responseForm.setError("비밀번호는 8자 이상 16자 이하여야 합니다");
-            return  responseForm;
+            return responseForm;
         }
 
         updateUser.setName(name);
@@ -248,7 +248,7 @@ public class UserService {
                 return responseForm.setError("약속초대목록이 비어있습니다");
 
             List<Appoint> appointList = new ArrayList<>();
-            for(Invite i : invites) {
+            for (Invite i : invites) {
                 User u = userRepository.findById(i.getFromId()).orElse(null);
                 Appoint a = new Appoint();
                 BeanUtils.copyProperties(appointRepository.findById(i.getAppointId()).orElse(null), a);
@@ -274,7 +274,7 @@ public class UserService {
 
         // userId로 찾은 userAuthority의 auth를 res에 담음
         List<UserAuthority> tmp = userAuthorityRepository.findByUserId(userId);
-        for(UserAuthority ua : tmp)
+        for (UserAuthority ua : tmp)
             res.add(authorityRepository.findById(ua.getAuthority()).orElse(null));
 
         return res;
@@ -293,7 +293,7 @@ public class UserService {
         List<User> users = userRepository.findByNameContains(str);
 
         User removeUser = null;
-        for(int i = 0; i < users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             Long fromId = userId;
             Long toId = users.get(i).getId();
             if (fromId == toId) removeUser = users.get(i);
@@ -324,7 +324,7 @@ public class UserService {
         params.put("to", userPhoneNumber);    // 수신전화번호
         params.put("from", "01055350934");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
         params.put("type", "SMS");
-        params.put("text", "sekkison 인증번호는" + "["+randomNumber+"]" + "입니다."); // 문자 내용 입력
+        params.put("text", "sekkison 인증번호는" + "[" + randomNumber + "]" + "입니다."); // 문자 내용 입력
         params.put("app_version", "test app 1.2"); // application name and version
 
         try {
@@ -358,7 +358,7 @@ public class UserService {
         List<User> users = userRepository.findByNameContains(str);
 
         List<User> removeUsers = new ArrayList<>();
-        for(int i = 0; i < users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             Long fromId = userId;
             Long toId = users.get(i).getId();
             if (fromId == toId) removeUsers.add(users.get(i));
@@ -371,25 +371,25 @@ public class UserService {
             }
         }
         if (removeUsers != null && removeUsers.size() != 0)
-            for(User u : removeUsers) users.remove(u);
+            for (User u : removeUsers) users.remove(u);
 
         // 이미 초대되어 제외할 유저 저장
         List<Invite> invites = inviteRepository.findByAppointId(appointId);
         Set<Long> invited = new HashSet<>();
-        for(Invite i : invites) invited.add(i.getToId());
+        for (Invite i : invites) invited.add(i.getToId());
 
         // 초대중으로 세팅
-        for(User u : users)
+        for (User u : users)
             if (invited.contains(u.getId()))
                 u.setMemo("-");
 
         // 이미 참가중이라 제외할 유저 저장
         List<MyAppoint> myAppoints = myAppointRepository.findByAppointId(appointId);
         Set<Long> inviting = new HashSet<>();
-        for(MyAppoint ma : myAppoints) inviting.add(ma.getUserId());
+        for (MyAppoint ma : myAppoints) inviting.add(ma.getUserId());
 
         // 참가중으로 세팅
-        for(User u : users)
+        for (User u : users)
             if (inviting.contains(u.getId()))
                 u.setMemo("O");
 
@@ -399,6 +399,7 @@ public class UserService {
 
         return new ResponseForm().setSuccess(users);
     }
+
     // 알람 개수 리턴(param 0:쪽지, 1:초대)
     public ResponseForm getAlarm(Long userId, Integer param) {
         ResponseForm res = new ResponseForm();
@@ -416,5 +417,55 @@ public class UserService {
             if (cnt == 0) return res.setError("초대 없음");
             else return res.setSuccess(cnt);
         }
+    }
+
+    public ResponseForm apiRegister(User user, Integer param) {
+        ResponseForm responseForm = new ResponseForm();
+
+        String name = user.getName();
+        String phone = user.getPhone();
+        Character gender = user.getGender();
+
+        if (name == null) return responseForm.setError("별명을 입력해주세요");
+        if (phone == null) return responseForm.setError("전화번호를 입력해주세요");
+        if (gender != 'M' && gender != 'F') return responseForm.setError("성별을 입력해주세요");
+
+        // 별명은 한글표기 2-4자로 제한
+        if (!Pattern.matches("^[가-힣]{2,8}$", name)) {
+            responseForm.setError("별명은 한글표기, 2-8자여야 합니다");
+            return responseForm;
+        }
+
+        // 전화번호는 - 제외 11자리 입력
+        if (!Pattern.matches("^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$", phone)) {
+            responseForm.setError("전화번호는 - 제외 11자리로 입력해주세요");
+            return responseForm;
+        }
+
+        if (param == 0) user.setApi("구글");
+        else if (param == 1) user.setApi("카카오");
+        else if (param == 2)user.setApi("네이버");
+
+
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        Authority authmember = authorityRepository.findByAuth("MEMBER");
+        UserAuthority ua = UserAuthority.builder()
+                .userId(user.getId())
+                .authority(authmember.getId())
+                .build();
+        userAuthorityRepository.save(ua);
+        return responseForm.setSuccess(user);
+    }
+
+    public ResponseForm findUser(String username) {
+        ResponseForm responseForm = new ResponseForm();
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            responseForm.setError("존재하지 않는 회원입니다");
+            return responseForm;
+        }
+        return responseForm.setSuccess(user);
     }
 }
