@@ -115,6 +115,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/apiRegister/{param}")
+    // api로 회원가입하기
     public ResponseForm apiRegister(User user, @PathVariable("param") Integer param) {
         return userService.apiRegister(user, param);
     }
@@ -123,7 +124,15 @@ public class UserController {
     @GetMapping("/find")
     // id로 user객체 받기
     public ResponseForm returnUser(String username) {
-
         return userService.findUser(username);
+    }
+
+    @ResponseBody
+    @PutMapping("/setPos/{userId}")
+    // posX, posY 세팅하기
+    public ResponseForm setPosition(
+            @PathVariable("userId") Long userId,
+            Double x, Double y) {
+        return userService.setPosition(userId, x, y);
     }
 }

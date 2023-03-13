@@ -14,6 +14,8 @@ import com.example.sekkison.my_appoint.MyAppoint;
 import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user_authority.UserAuthority;
 import com.example.sekkison.user_authority.UserAuthorityRepository;
+import com.example.sekkison.user_file.UserFile;
+import com.example.sekkison.user_file.UserFileRepository;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
@@ -41,6 +43,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MyAppointRepository myAppointRepository;
     private final MessageRepository messageRepository;
+    private final UserFileRepository userFileRepository;
 
     // 회원 가입(input user)
     public ResponseForm register(User user) {
@@ -103,6 +106,10 @@ public class UserService {
                 .authority(authmember.getId())
                 .build();
         userAuthorityRepository.save(ua);
+        UserFile userFile = UserFile.builder()
+                .userId(user.getId())
+                .file("default.jpg").build();
+        userFileRepository.save(userFile);
         responseForm.setSuccess(null);
 
         return responseForm;
@@ -455,6 +462,10 @@ public class UserService {
                 .authority(authmember.getId())
                 .build();
         userAuthorityRepository.save(ua);
+        UserFile userFile = UserFile.builder()
+                .userId(user.getId())
+                .file("default.jpg").build();
+        userFileRepository.save(userFile);
         return responseForm.setSuccess(user);
     }
 
@@ -467,5 +478,15 @@ public class UserService {
             return responseForm;
         }
         return responseForm.setSuccess(user);
+    }
+
+    // posX, posY 세팅하기
+    public ResponseForm setPosition(Long userId, Double x, Double y) {
+        if (x == null || y == null) return new ResponseForm().setError("좌표 오류");
+        User user = userRepository.findById(userId).orElse(null);
+        user.setPosX(x);
+        user.setPosY(y);
+        userRepository.save(user);
+        return new ResponseForm().setSuccess(null);
     }
 }
