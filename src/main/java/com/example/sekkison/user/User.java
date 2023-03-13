@@ -40,6 +40,15 @@ public class User extends BaseEntity {
     @ColumnDefault("''")
     private String content;
 
+    @Column(name = "pos_x")
+    private Double posX;
+
+    @Column(name = "pos_y")
+    private Double posY;
+
+    @Column
+    private String api;
+
     @Transient
     private String memo;
 }

@@ -1,6 +1,9 @@
 # Sekkison
 # JPA Repository / RestApi 구현 / Spring Security (BcrpitPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
 
+<p align="">
+<img width="500" alt="erd8" src="https://user-images.githubusercontent.com/112387307/224238495-a9c011b0-d17a-46ba-9db7-474046386001.png">
+
 ## 구현 완료
 **Function** | **완료** | 
 :------------ | :-------------|  
@@ -29,3 +32,46 @@
 # ERD 다이어그램
 <p align="center">
 <img width="700" alt="erd8" src="https://user-images.githubusercontent.com/112387307/223662586-150f0bbd-d5fa-457d-a4f8-5bf6c059cf62.png">
+
+### 테스트 전용 로그인 회원
+**User**
+> - ID : user1
+> - PW : 1234
+<hr>
+
+## 🔽 RestAPI EndPoint
+
+| METHOD | URI                                | 기능                                                     |
+| ------ | ---------------------------------- |--------------------------- |
+| POST   | /**users**                | 회원가입                        | 
+| POST   | /**users**/login                | 로그인                       | 
+| GET   | /**users**/{userId}       | User객체 반환                      | 
+| PUT    | /**users**/{userId}                      | 회원정보수정                                            |
+| DELETE | /**users**/{userId}                     |회원탈퇴                                         | 
+| GET    | /**users**/duplicated/{parameter}      | 아이디, 별명, 전화번호 중복체크                           | 
+| GET    | /**users**/my_list/{userId}/{parameter}  | 친구 초대 리스트, 약속 초대 리스트                                 | 
+| PUT   | /**users**/{param}/{userId}     | 별명, content 정보수정    |
+| GET    | /**users**/search/invite/{userId}/{appointId}{postId}| 약속에 초대할 유저 검색     |
+| POST | /**upload**/upload             | 프로필 업로드                                           |
+| GET | /**upload**/{userId}           | 프로필 불러오기                                          |
+| POST | /**appoints**/{userId}          | 약속 만들기 |                      
+| GET | /**appoints**/{userId}/{appointId}        | 약속 가져오기                                          |
+| PUT | /**appoints**/{appointId}/{userId}             | 약속 수정                                       | 
+| DELETE | /**appoints**/{userId}/{appointId}             | 약속 삭제                                |
+| GET | /**appoints**/members/{appointId}| 멤버 별명 가져오기                                        |
+| DELETE | /**appoints**/members/{appoint_id}/{from_id}/{to_id} | 약속 멤버 강퇴                | 
+| GET | /**appoints**/search/{is_public}/{is_recruit}/{page} | 약속 최대인원 수정                | 
+| PUT | /**appoints**/setCount/{appoint_id}/{user_id}/{count} | 약속 멤버 강퇴                |  
+| GET | /**appoints**/list/{userId}/{page}| 내약속목록 가져오기               | 
+| DELETE | /**friends**/{friendId} | 친구초대 거절              | 
+| POST | /**friends**/ | 친구초대 보내기               |  
+| POST | /**friends**/accept/{friendId} | 친구초대 수락                | 
+| GET | /**friends**/list{userId} | 친구목록                | 
+| DELETE | /**invites**/{inviteId} | 약속초대 거절                | 
+| POST | /**invites**//{appointId}/{fromId}/{toId} | 초대보내기                | 
+| GET | /**messages**/list/{userId} | 쪽지 목록                | 
+| DELETE | /**messages**/{userId} | 쪽지 삭제           | 
+| POST | /**messages** | 쪽지 보내기                | 
+| GET | /**myAppoints**/is_master/{userId}/{appointId} | 방장 여부               | 
+| POST | /**myAppoints**/{userId}/{appointId} | 약속 참가              | 
+| DELETE | /**myAppoints**/{userId}/{appointId} | 약속 나가기           | 
