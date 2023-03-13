@@ -9,6 +9,7 @@ import com.example.sekkison.friend.Friend;
 import com.example.sekkison.friend.FriendRepository;
 import com.example.sekkison.invite.Invite;
 import com.example.sekkison.invite.InviteRepository;
+import com.example.sekkison.message.MessageRepository;
 import com.example.sekkison.my_appoint.MyAppoint;
 import com.example.sekkison.my_appoint.MyAppointRepository;
 import com.example.sekkison.user_authority.UserAuthority;
@@ -39,6 +40,7 @@ public class UserService {
     private final AppointRepository appointRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MyAppointRepository myAppointRepository;
+    private final MessageRepository messageRepository;
 
     // 회원 가입(input user)
     public ResponseForm register(User user) {
@@ -396,5 +398,23 @@ public class UserService {
             return new ResponseForm().setError("해당 유저가 없습니다");
 
         return new ResponseForm().setSuccess(users);
+    }
+    // 알람 개수 리턴(param 0:쪽지, 1:초대)
+    public ResponseForm getAlarm(Long userId, Integer param) {
+        ResponseForm res = new ResponseForm();
+
+        if (param == 0) {
+            List<com.example.sekkison.message.Message> messages = messageRepository.findByToId(userId);
+            if (messages.size() == 0) return res.setError("쪽지 없음");
+            else return res.setSuccess(messages.size());
+        } else {
+            int cnt = 0;
+            List<Invite> invites = inviteRepository.findByToId(userId);
+            List<Friend> friends = friendRepository.findByToIdAndIsAccepted(userId, false);
+            cnt += invites.size();
+            cnt += friends.size();
+            if (cnt == 0) return res.setError("초대 없음");
+            else return res.setSuccess(cnt);
+        }
     }
 }

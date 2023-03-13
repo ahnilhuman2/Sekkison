@@ -14,4 +14,6 @@ public interface MyAppointRepository extends JpaRepository<MyAppoint, Long> {
     List<MyAppoint> findByAppointIdAndIsMaster(Long appointId, boolean b);
 
     Page<MyAppoint> findByUserId(Long userId, Pageable pageable);
+
+    List<MyAppoint> findByUserId(Long userId);
 }
