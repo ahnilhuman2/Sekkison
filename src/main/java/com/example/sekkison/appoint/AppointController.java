@@ -62,14 +62,15 @@ public class AppointController {
         return appointService.deleteAppointMembers(appoint_id, from_id, to_id);
     }
     @ResponseBody
-    @GetMapping("/search/{is_public}/{is_recruit}/{page}")
+    @GetMapping("/search/{is_public}/{is_recruit}/{is_ftf}/{page}")
     // 약속 검색
     public ResponseForm searchAppointList(
             String search,
             @PathVariable("is_public") Integer is_public,
             @PathVariable("is_recruit") Integer is_recruit,
+            @PathVariable("is_ftf") Integer is_ftf,
             @PathVariable("page") Integer page) {
-        return appointService.getSearchAppointList(search, is_public, is_recruit, page);
+        return appointService.getSearchAppointList(search, is_public, is_recruit, is_ftf, page);
     }
     @ResponseBody
     @PutMapping("/setCount/{appoint_id}/{user_id}/{count}")

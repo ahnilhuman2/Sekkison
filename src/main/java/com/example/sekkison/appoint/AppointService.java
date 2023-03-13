@@ -166,13 +166,15 @@ public class AppointService {
         return res.setSuccess(null);
     }
     // 검색어, 공개여부, 모집여부로 Appoint리스트 가져오기
-    // 공개여부 0:공개, 1:비공개
-    // 모집여부 0:모집중, 1:모집완료
-    public ResponseForm getSearchAppointList(String search, Integer isPublic, Integer isRecruit, Integer page) {
+    // 공개여부 1:공개, 0:비공개
+    // 모집여부 1:모집중, 0:모집완료
+    // 만남여부 1:만남, 0:온라인
+    public ResponseForm getSearchAppointList(String search, Integer isPublic, Integer isRecruit, Integer isFtf, Integer page) {
         ResponseForm res = new ResponseForm();
 
         Boolean is_public = isPublic == 1 ? true : false;
         Boolean is_recruit = isRecruit == 1 ? true : false;
+        C.appointType is_ftf = isFtf == 1 ? C.appointType.FTF : C.appointType.NFTF;
         
         // 페이징 설정
         int pageSize = 10;
@@ -180,8 +182,8 @@ public class AppointService {
 
         // 조건에 맞는 appoint리스트 생성
         Page<Appoint> appointList =
-                appointRepository.findByIsPublicAndIsRecruitAndTitleContainsAndDdayAfter(
-                        is_public, is_recruit, search, LocalDateTime.now() ,pageable);
+                appointRepository.findByIsPublicAndIsRecruitAndTypeAndTitleContainsAndDdayAfter(
+                        is_public, is_recruit, is_ftf, search, LocalDateTime.now() ,pageable);
 
         // 불러올 약속이 없으면 에러
         if (appointList.getContent().size() == 0) return res.setError("더이상 약속이 없습니다");
