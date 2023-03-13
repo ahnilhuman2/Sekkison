@@ -86,7 +86,7 @@ public class UserController {
 
     @ResponseBody
     @PutMapping("/{param}/{userId}")
-    // 회원정보수정
+    // 별명, content 정보수정
     public ResponseForm updateName(
             @PathVariable("param") Integer param,
             @PathVariable("userId") Long userId,
