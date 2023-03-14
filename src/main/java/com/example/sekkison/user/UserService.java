@@ -259,7 +259,7 @@ public class UserService {
                 User u = userRepository.findById(i.getFromId()).orElse(null);
                 Appoint a = new Appoint();
                 BeanUtils.copyProperties(appointRepository.findById(i.getAppointId()).orElse(null), a);
-                a.setMemo(u.getName() + "&" + i.getId());
+                a.setMemo(u.getName() + "&" + u.getId());
                 a.setCreateAt(i.getCreateAt());
                 appointList.add(a);
             }
