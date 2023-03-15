@@ -85,4 +85,19 @@ public class FriendService {
 
         return responseForm.setSuccess(list2);
     }
+
+    public ResponseForm memo(Long fromId, Long toId, String memo) {
+        ResponseForm responseForm = new ResponseForm();
+        Friend friend = friendRepository.findByToIdAndFromId(fromId, toId);
+
+        if (friend == null) return responseForm.setError("해당 유저가 없습니다.");
+
+        if (friend.getIsAccepted() == false) {
+            return responseForm.setError("친구가 아닙니다");
+        } else {
+            friend.setMemo(memo);
+            friendRepository.save(friend);
+            return responseForm.setError("작성 성공");
+        }
+    }
 }
