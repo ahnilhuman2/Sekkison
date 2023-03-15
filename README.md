@@ -4,6 +4,15 @@
 <p align="">
 <img width="500" alt="erd8" src="https://user-images.githubusercontent.com/112387307/224238495-a9c011b0-d17a-46ba-9db7-474046386001.png">
 
+### 📌 프로젝트 기술스택
+- 에디터 : Intellij Ultimate
+- 개발 툴 : SpringBoot 2.7.8
+- 자바 : JAVA 11
+- 빌드 : Gradle 7.6
+- 서버 : AWS EC2
+- 데이터베이스 : MySql
+- 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
+
 ## 구현 완료
 **Function** | **완료** | 
 :------------ | :-------------|  
