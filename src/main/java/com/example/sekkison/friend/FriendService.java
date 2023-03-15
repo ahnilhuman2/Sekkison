@@ -97,7 +97,7 @@ public class FriendService {
         } else {
             friend.setMemo(memo);
             friendRepository.save(friend);
-            return responseForm.setError("작성 성공");
+            return responseForm.setSuccess(null);
         }
     }
 }
