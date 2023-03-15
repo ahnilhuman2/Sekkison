@@ -39,4 +39,11 @@ public class FriendController {
         return friendService.friendList(userId);
     }
 
+    @ResponseBody
+    @PutMapping("/memo/{fromId}/{toId}")
+    // 친구목록메모
+    public ResponseForm memo(@PathVariable("fromId") Long fromId, @PathVariable("toId") Long toId, String memo) {
+        return friendService.memo(fromId, toId, memo);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.example.sekkison.message;
 import com.example.sekkison.common.ResponseForm;
 import com.example.sekkison.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class MessageService {
     // 쪽지 목록
     public ResponseForm messageList(Long userId) {
         ResponseForm responseForm = new ResponseForm();
-        List<Message> messages = messageRepository.findByToId(userId);
+        List<Message> messages = messageRepository.findByToId(userId, Sort.by("id").descending());
 
         return responseForm.setSuccess(messages);
     }
