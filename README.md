@@ -1,5 +1,5 @@
 # Sekkison
-# JPA Repository / RestApi 구현 / Spring Security (BcrpitPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
+# JPA Repository / RestApi 구현 / Spring Security (BcryptPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
 
 <p align="">
 <img width="500" alt="erd8" src="https://user-images.githubusercontent.com/112387307/224238495-a9c011b0-d17a-46ba-9db7-474046386001.png">
