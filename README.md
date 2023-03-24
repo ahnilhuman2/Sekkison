@@ -32,7 +32,6 @@
 **쪽지, 초대 알림 구현** | :heavy_check_mark: |
 **화면 UI 개발 (헤더, 풋터, 회원가입, home, 로그인, 약속만들기, 친구조회, 사용자조회, 친구초대, 약속초대)** | :heavy_check_mark: | 
 **google, kakao, naver API 로그인 구현** | :heavy_check_mark: |  
-**Gitlab CI & Crontab CD** | :heavy_check_mark: |  
 **front 비동기 (Ajax)** | :heavy_check_mark: |  
 **카카오맵 생성(KaKao Developer)** | :heavy_check_mark: |  
 **마커 생성(KaKao Developer)** | :heavy_check_mark: | 
