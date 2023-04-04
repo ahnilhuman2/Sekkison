@@ -1,6 +1,8 @@
 # Sekkison
 # JPA Repository / RestApi 구현 / Spring Security (BcryptPasswordEncoder) / Kakao맵 구현 / 비동기 Api 구현
 
+프론트 배포 주소 : https://kdjdj77.github.io/Sekkison_Front/
+
 <p align="">
 <img width="500" alt="erd8" src="https://user-images.githubusercontent.com/112387307/224238495-a9c011b0-d17a-46ba-9db7-474046386001.png">
 
@@ -30,7 +32,6 @@
 **쪽지, 초대 알림 구현** | :heavy_check_mark: |
 **화면 UI 개발 (헤더, 풋터, 회원가입, home, 로그인, 약속만들기, 친구조회, 사용자조회, 친구초대, 약속초대)** | :heavy_check_mark: | 
 **google, kakao, naver API 로그인 구현** | :heavy_check_mark: |  
-**Gitlab CI & Crontab CD** | :heavy_check_mark: |  
 **front 비동기 (Ajax)** | :heavy_check_mark: |  
 **카카오맵 생성(KaKao Developer)** | :heavy_check_mark: |  
 **마커 생성(KaKao Developer)** | :heavy_check_mark: | 
